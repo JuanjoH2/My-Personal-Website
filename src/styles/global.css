@@ -1,0 +1,60 @@
+html {
+    /* Applies the HEX #1e1f20 to the background of the body */
+    background-color: #1e1f20;
+    /* Applies the HEX #fdfdfd to the text */
+    color: #fdfdfd;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+section {
+    /* Makes the body take up the full height of the viewport */
+    height: 100vh;
+
+    /* Activates the flexible box layout */
+    display: flex;
+
+    /* Centers children (the .titleDiv) horizontally */
+    justify-content: center;
+
+    /* Centers children (the .titleDiv) vertically */
+    align-items: center;
+}
+
+/* This rule targets ONLY h1 elements that are descendants of .titleDiv */
+.titleDiv h1 {
+    margin: 0;
+    font-weight: normal;
+    text-align: left;
+    font-size: 64px;
+}
+
+/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
+.titleDiv h2 {
+    margin: 0, 0;
+    font-weight: normal;
+    text-align: center;
+    font-size: 64px;
+}
+
+.titleDiv {
+    /* Applies 16px rounded corners */
+    border-radius: 16px;
+    /* Applies a 1px solid white border */
+    border: 1px solid white;
+    /* Makes the background of divs HEX #0e0e0e */
+    background-color: #0e0e0e;
+    /* Width of the Div (box) */
+    width: 512px;
+    /* Height of the Div (box) */
+    height: auto;
+
+    /* This centers the element horizontally within its parent */
+    margin-left: auto;
+    margin-right: auto;
+
+    /* This centers the Div (box) */
+    margin: 0 auto;
+    /* Padding insite the Div (box) */
+    padding: 32px;
+}
