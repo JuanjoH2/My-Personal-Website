@@ -1,3 +1,6 @@
+/* ========================================================= */
+/* GLOBAL STYLES */
+/* ========================================================= */
 html {
     /* Applies the HEX #1e1f20 to the background of the body */
     background-color: #1e1f20;
@@ -7,6 +10,47 @@ html {
     font-family: 'Montserrat', sans-serif;
 }
 
+/* ========================================================= */
+/* HEADER STYLES (Fixed and Overlapping) */
+/* ========================================================= */
+.main-header {
+    /* Pins the header to the top of the viewport */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    /* Defines the height of the header (64px) */
+
+    /* Ensure the header is always on top of other content */
+    z-index: 100;
+
+    /* Basic styling for visibility */
+    background-color: #1e1f20, 0;
+    /* White background */
+
+
+    /* Flex alignment for logo placement */
+    display: flex;
+    align-items: center;
+    /* Vertically center the logo */
+
+    margin-top: 16px;
+    margin-left: 16px;
+    /* Horizontal padding (16px) */
+}
+
+/* Style for the SVG/Logo element */
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+
+/* ========================================================= */
+/* SECTION & CONTENT STYLES */
+/* ========================================================= */
 section {
     /* Makes the body take up the full height of the viewport */
     height: 100vh;
@@ -21,22 +65,6 @@ section {
     align-items: center;
 }
 
-/* This rule targets ONLY h1 elements that are descendants of .titleDiv */
-.titleDiv h1 {
-    margin: 0;
-    font-weight: normal;
-    text-align: left;
-    font-size: 64px;
-}
-
-/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
-.titleDiv h2 {
-    margin: 0, 0;
-    font-weight: normal;
-    text-align: center;
-    font-size: 64px;
-}
-
 .titleDiv {
     /* Applies 16px rounded corners */
     border-radius: 16px;
@@ -49,12 +77,34 @@ section {
     /* Height of the Div (box) */
     height: auto;
 
-    /* This centers the element horizontally within its parent */
-    margin-left: auto;
-    margin-right: auto;
-
-    /* This centers the Div (box) */
+    /* This centers the Div (box) and removes other margins */
     margin: 0 auto;
-    /* Padding insite the Div (box) */
+
+    /* Padding inside the Div (box) */
     padding: 32px;
+}
+
+/* This rule targets ONLY h1 elements that are descendants of .titleDiv */
+.titleDiv h1 {
+    margin: 0;
+    font-weight: normal;
+    text-align: left;
+    font-size: 64px;
+}
+
+/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
+.titleDiv h2 {
+    margin: 0;
+    /* Corrected margin syntax: multiple values are separated by spaces, not commas */
+    font-weight: normal;
+    text-align: center;
+    font-size: 64px;
+}
+
+/* NOTE: The original .logo class is redundant since we use .logo-icon now, 
+   but it is kept for completeness in case you use it elsewhere. 
+*/
+.logo {
+    height: 64px;
+    width: 64px;
 }
