@@ -55,29 +55,62 @@ import Navigation from "./Navigation.astro";
     }
 </style>
 
-<script>
-    const toggleButton = document.getElementById("menu-toggle");
-    const navLinks = document.getElementById("main-menu-links");
+<script defer is:inline>
+    // 1. Get all necessary DOM elements
+    const toggleButton = document.getElementById("menu-toggle"); // The button that opens the menu (hamburger icon)
+    const navLinks = document.getElementById("main-menu-links"); // The actual navigation list container
+    const closeBtn = document.getElementById("close-button"); // The button inside the menu to close it ('X' icon)
+    const backdrop = document.getElementById("backdrop"); // The dark full-page overlay
 
-    if (toggleButton && navLinks) {
-        // 1. Toggle Menu Visibility on Button Click
-        toggleButton.addEventListener("click", () => {
-            // Toggles the 'expanded' class, which controls the menu's display property in CSS
-            navLinks.classList.toggle("expanded");
+    /**
+     * Toggles the menu state (open/closed) and updates all related elements.
+     * @param {boolean} closeOnly - Forces the menu to close.
+     */
+    const toggleMenu = (closeOnly = false) => {
+        // Essential check: If navLinks or backdrop don't exist, exit the function.
+        if (!navLinks || !backdrop) return;
 
-            // Toggles the 'aria-expanded' attribute for screen reader accessibility
-            const isExpanded =
-                toggleButton.getAttribute("aria-expanded") === "true" || false;
-            toggleButton.setAttribute("aria-expanded", String(!isExpanded));
-        });
+        // Determine the new expanded state. If closeOnly is true, force it to false.
+        const shouldBeExpanded = closeOnly
+            ? false
+            : !navLinks.classList.contains("expanded");
 
-        // 2. Auto-Close Menu on Link Click (Optional, but recommended for navigation)
-        // This provides a better user experience since the menu closes after a page navigation starts.
+        // Apply the 'expanded' class to the navigation
+        navLinks.classList.toggle("expanded", shouldBeExpanded);
+
+        // Apply the 'visible' class to the backdrop
+        backdrop.classList.toggle("visible", shouldBeExpanded);
+
+        // Update the main toggle button's aria-expanded attribute
+        if (toggleButton) {
+            toggleButton.setAttribute(
+                "aria-expanded",
+                String(shouldBeExpanded),
+            );
+        }
+    };
+
+    // Check if the essential elements are present before adding listeners
+    if (navLinks && backdrop) {
+        // A. Open/Close Menu using the Main Hamburger Button
+        if (toggleButton) {
+            toggleButton.addEventListener("click", () => toggleMenu());
+        }
+
+        // B. Close Menu using the 'X' Button inside the menu
+        if (closeBtn) {
+            // Force the menu to close when 'X' is clicked
+            closeBtn.addEventListener("click", () => toggleMenu(true));
+        }
+
+        // C. Auto-Close Menu when a Navigation Link is Clicked
+        // Check navLinks again before trying to query its children
         navLinks.querySelectorAll("a").forEach((link) => {
-            link.addEventListener("click", () => {
-                navLinks.classList.remove("expanded");
-                toggleButton.setAttribute("aria-expanded", "false");
-            });
+            // Force the menu to close when a link is clicked
+            link.addEventListener("click", () => toggleMenu(true));
         });
+
+        // D. Close Menu when the Backdrop is Clicked (Recommended UX)
+        backdrop.addEventListener("click", () => toggleMenu(true));
     }
 </script>

@@ -1,39 +1,68 @@
 <div id="main-menu-links" class="nav-links">
+    <button id="close-button" class="close-button" aria-label="Close">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+        >
+            <path
+                d="M18 6L6 18M6 6l12 12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+        </svg>
+    </button>
     <a href="/">Home</a>
     <a href="/music">Music</a>
 </div>
-
 <style>
     /* --- Mobile/Universal Styles --- */
     .nav-links {
         /* Always hidden unless the button is clicked */
         display: none;
         flex-direction: column;
-        width: 100%;
+        width: 256px;
+        height: 100vh;
         position: absolute;
-        top: 60px;
-        left: 0;
+        top: 0px;
+        right: 0px;
         background-color: #333;
         z-index: 10;
-        padding: 10px 0;
+        padding: 16px;
     }
 
     .nav-links a {
         color: white;
-        padding: 15px 20px;
+        padding: 16px 20px;
         text-decoration: none;
         text-align: center;
-        border-bottom: 1px solid #444;
+        font-size: 16px;
+        border: 0px;
+        box-shadow: none;
     }
 
     .nav-links a:hover {
-        background-color: #555;
+        color: aqua;
     }
 
     /*
-   * The .expanded class is what makes it visible.
-   */
+    * The .expanded class is what makes it visible.
+    */
     .nav-links.expanded {
         display: flex;
+    }
+
+    .close-button {
+        background-color: #333;
+        color: white;
+        padding: 16px 20px;
+        text-align: left;
+        border: none;
+    }
+
+    .close-button:hover {
+        color: aqua;
     }
 </style>
