@@ -1,66 +1,25 @@
 /* ========================================================= */
-/* GLOBAL STYLES */
+/* GLOBAL STYLES                                             */
 /* ========================================================= */
 html {
     /* Applies the HEX #1e1f20 to the background of the body */
     background-color: #1e1f20;
     /* Applies the HEX #fdfdfd to the text */
-    color: #fdfdfd;
-
+    color: white;
+    /* Applies the Montserrat font-family to the text */
     font-family: 'Montserrat', sans-serif;
 }
 
 /* ========================================================= */
-/* HEADER STYLES (Fixed and Overlapping) */
-/* ========================================================= */
-.main-header {
-    /* Pins the header to the top of the viewport */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    /* Defines the height of the header (64px) */
-
-    /* Ensure the header is always on top of other content */
-    z-index: 100;
-
-    /* Basic styling for visibility */
-    background-color: #1e1f20, 0;
-    /* White background */
-
-
-    /* Flex alignment for logo placement */
-    display: flex;
-    align-items: center;
-    /* Vertically center the logo */
-
-    margin-top: 16px;
-    margin-left: 16px;
-    /* Horizontal padding (16px) */
-}
-
-/* Style for the SVG/Logo element */
-.logo-icon {
-    width: 32px;
-    height: 32px;
-    display: block;
-}
-
-
-/* ========================================================= */
-/* SECTION & CONTENT STYLES */
+/* SECTION & CONTENT STYLES                                  */
 /* ========================================================= */
 section {
     /* Makes the body take up the full height of the viewport */
     height: 100vh;
-
     /* Activates the flexible box layout */
     display: flex;
-
     /* Centers children (the .titleDiv) horizontally */
     justify-content: center;
-
     /* Centers children (the .titleDiv) vertically */
     align-items: center;
 }
@@ -76,10 +35,8 @@ section {
     width: 512px;
     /* Height of the Div (box) */
     height: auto;
-
     /* This centers the Div (box) and removes other margins */
     margin: 0 auto;
-
     /* Padding inside the Div (box) */
     padding: 32px;
 }
@@ -99,12 +56,4 @@ section {
     font-weight: normal;
     text-align: center;
     font-size: 64px;
-}
-
-/* NOTE: The original .logo class is redundant since we use .logo-icon now, 
-   but it is kept for completeness in case you use it elsewhere. 
-*/
-.logo {
-    height: 64px;
-    width: 64px;
 }
