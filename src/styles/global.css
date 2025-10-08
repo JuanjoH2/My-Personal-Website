@@ -3,7 +3,7 @@
 /* ========================================================= */
 html {
     /* Applies the HEX #1e1f20 to the background of the body */
-    background-color: #1e1f20;
+    background-color: #1E1F20;
     /* Applies the HEX #fdfdfd to the text */
     color: white;
     /* Applies the Montserrat font-family to the text */
@@ -30,7 +30,7 @@ section {
     /* Applies a 1px solid white border */
     border: 1px solid white;
     /* Makes the background of divs HEX #0e0e0e */
-    background-color: #0e0e0e;
+    background-color: black;
     /* Width of the Div (box) */
     width: 512px;
     /* Height of the Div (box) */
@@ -41,6 +41,56 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.subtitleDiv {
+    /* Applies 16px rounded corners */
+    border-radius: 16px;
+    /* Applies a 1px solid white border */
+    border: 1px solid white;
+    /* Makes the background of divs HEX #0e0e0e */
+    background-color: black;
+    /* Width of the Div (box) */
+    width: 512px;
+    /* Height of the Div (box) */
+    height: 222px;
+    /* This centers the Div (box) and removes other margins */
+    margin: 0 auto;
+    /* These attributes are for making the content fully centered */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subtitleDiv:hover {
+    /* Applies 16px rounded corners */
+    border-radius: 16px;
+    /* Applies a 1px solid white border */
+    border: 1px solid #0091e1;
+    /* Makes the background of divs HEX #0e0e0e */
+    background-color: black;
+    /* Width of the Div (box) */
+    width: 512px;
+    /* Height of the Div (box) */
+    height: 222px;
+    /* This centers the Div (box) and removes other margins */
+    margin: 0 auto;
+    /* These attributes are for making the content fully centered */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subtitleDiv h1 {
+    font-weight: normal;
+    text-align: left;
+    font-size: 64px;
+}
+
+.subtitleDiv h2 {
+    font-weight: normal;
+    text-align: center;
+    font-size: 64px;
 }
 
 /* This rule targets ONLY h1 elements that are descendants of .titleDiv */
