@@ -81,31 +81,28 @@ section {
     align-items: center;
 }
 
-.subtitleDiv h1 {
-    font-weight: normal;
-    text-align: left;
-    font-size: 64px;
-}
-
-.subtitleDiv h2 {
-    font-weight: normal;
-    text-align: center;
-    font-size: 64px;
-}
-
 /* This rule targets ONLY h1 elements that are descendants of .titleDiv */
-.titleDiv h1 {
+h1 {
     font-weight: normal;
     text-align: left;
     font-size: 64px;
 }
 
 /* This rule targets ONLY h2 elements that are descendants of .titleDiv */
-.titleDiv h2 {
+h2 {
     /* Corrected margin syntax: multiple values are separated by spaces, not commas */
     font-weight: normal;
     text-align: center;
     font-size: 64px;
+}
+
+/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
+h3 {
+    /* Corrected margin syntax: multiple values are separated by spaces, not commas */
+    color: white;
+    font-weight: normal;
+    text-align: center;
+    font-size: 16px;
 }
 
 /* BACKDROP STYLES */
