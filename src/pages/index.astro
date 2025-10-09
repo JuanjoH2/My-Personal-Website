@@ -1,19 +1,26 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import MusicIco from "../assets/music.svg"; // Ensure this path is correct
 import "../styles/global.css";
 const pageTitle = "Home Page";
 ---
 
-<BaseLayout pageTitle={pageTitle} ;>
+<BaseLayout pageTitle={pageTitle}>
     <section id="compositions">
-        <div class="subtitleDiv">
+        <div id="compositionsDiv" class="subtitleDiv">
             <h2>Musical Compositions</h2>
         </div>
-    </section>
-    <section id="thoughts">
-        <div class="subtitleDiv">
-            <h2>Thoughts</h2>
-        </div>
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
+        <MusicIco class="music-icon" />
     </section>
     <section id="newsletter">
         <div class="subtitleDiv">
@@ -26,3 +33,92 @@ const pageTitle = "Home Page";
         </div>
     </section>
 </BaseLayout>
+
+<style>
+    .music-icon {
+        /* Set the starting position */
+        translate: -50% -50%;
+        position: absolute;
+        z-index: -1;
+        left: 50%;
+        top: 50%;
+
+        /* Set size and color */
+        width: 64px;
+        height: 64px;
+        color: white;
+
+        /* Set the animation */
+        transition: transform 1s ease-out;
+    }
+
+    /* 1. Left and Up */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
+        /* Moves 200px Left (Negative X) and 150px Up (Negative Y) from the center */
+        transform: translate(-200px, -150px);
+        transition-delay: 0.1s;
+    }
+
+    /* 2. Far Right */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(3) {
+        /* Moves 350px Right (Positive X) and 20px Up (Negative Y) from the center */
+        transform: translate(350px, -20px);
+        transition-delay: 0.2s;
+    }
+
+    /* 3. Down and Left (Opposite of 1) */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
+        /* Moves 100px Left and 250px Down (Positive Y) from the center */
+        transform: translate(-100px, 250px);
+        transition-delay: 0.3s;
+    }
+
+    /* 4. Far Up */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(5) {
+        /* Moves 50px Left and 300px Up from the center */
+        transform: translate(-50px, -300px);
+        transition-delay: 0.4s;
+    }
+
+    /* 5. Near Right */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
+        /* Moves 150px Right and 100px Down from the center */
+        transform: translate(150px, 100px);
+        transition-delay: 0.5s;
+    }
+
+    /* 6. Up, slightly centered */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
+        /* Moves 20px Right and 150px Up from the center */
+        transform: translate(20px, -150px);
+        transition-delay: 0.6s;
+    }
+
+    /* 7. Far Down */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
+        /* Moves 100px Right and 350px Down from the center */
+        transform: translate(100px, 350px);
+        transition-delay: 0.7s;
+    }
+
+    /* 8. Just outside the left border */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
+        /* Moves 300px Left and 50px Down from the center */
+        transform: translate(-300px, 50px);
+        transition-delay: 0.8s;
+    }
+
+    /* 9. Down and Right */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
+        /* Moves 250px Right and 250px Down from the center */
+        transform: translate(250px, 250px);
+        transition-delay: 0.9s;
+    }
+
+    /* 10. Up and Right */
+    #compositionsDiv:hover ~ .music-icon:nth-of-type(11) {
+        /* Moves 500px Right (Positive X) and 500px Up (Negative Y) from the center */
+        transform: translate(300px, -300px);
+        transition-delay: 1s;
+    }
+</style>
