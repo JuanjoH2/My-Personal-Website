@@ -8,6 +8,8 @@ html {
     color: white;
     /* Applies the Montserrat font-family to the text */
     font-family: 'Montserrat', sans-serif;
+    /* Personalized cursor */
+    cursor: url('../assets/circle.svg') 8 8, auto;
 }
 
 /* ========================================================= */
@@ -55,31 +57,54 @@ section {
     width: 512px;
     /* Height of the Div (box) */
     height: 222px;
-    /* This centers the Div (box) and removes other margins */
-    margin: 0 auto;
     /* These attributes are for making the content fully centered */
     display: flex;
     justify-content: center;
     align-items: center;
+
+    position: relative;
 }
 
-.subtitleDiv:hover {
-    /* Applies 16px rounded corners */
-    border-radius: 16px;
-    /* Applies a 1px solid white border */
-    border: 1px solid #0091e1;
-    /* Makes the background of divs HEX #0e0e0e */
+
+.subtitleDiv button {
+    /* Dimensions */
+    width: 16px;
+    height: 16px;
+
+    right: 16px;
+    top: 16px;
+
+    /* Shape and Border */
+    border-radius: 100%;
+    /* Makes it fully rounded */
+    border: 1px solid white;
+    /* 1px white border */
+
+    /* Colors */
     background-color: black;
-    /* Width of the Div (box) */
-    width: 512px;
-    /* Height of the Div (box) */
-    height: 222px;
-    /* This centers the Div (box) and removes other margins */
-    margin: 0 auto;
-    /* These attributes are for making the content fully centered */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    position: absolute;
+}
+
+.subtitleDiv button:hover {
+    /* Dimensions */
+    width: 16px;
+    height: 16px;
+
+    right: 16px;
+    top: 16px;
+
+    /* Shape and Border */
+    border-radius: 100%;
+    /* Makes it fully rounded */
+    border: 1px solid #0091e1;
+    /* 1px white border */
+
+    /* Colors */
+    background-color: black;
+
+    position: absolute;
+    cursor: url('../assets/circle2.svg') 8 8, pointer;
 }
 
 /* This rule targets ONLY h1 elements that are descendants of .titleDiv */
