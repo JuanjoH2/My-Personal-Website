@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import MusicIco from "../assets/music.svg"; // Ensure this path is correct
+import Music1 from "../assets/music1.svg";
+import Music2 from "../assets/music2.svg";
+import Music3 from "../assets/music3.svg";
+import Music4 from "../assets/music4.svg";
 import "../styles/global.css";
 const pageTitle = "Home Page";
 ---
@@ -10,17 +13,17 @@ const pageTitle = "Home Page";
         <div id="compositionsDiv" class="subtitleDiv">
             <h2>Musical Compositions</h2>
         </div>
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
-        <MusicIco class="music-icon" />
+        <Music1 class="music-icon" />
+        <Music2 class="music-icon" />
+        <Music3 class="music-icon" />
+        <Music4 class="music-icon" />
+        <Music1 class="music-icon" />
+        <Music2 class="music-icon" />
+        <Music3 class="music-icon" />
+        <Music4 class="music-icon" />
+        <Music1 class="music-icon" />
+        <Music2 class="music-icon" />
+        <Music3 class="music-icon" />
     </section>
     <section id="newsletter">
         <div class="subtitleDiv">
@@ -55,8 +58,12 @@ const pageTitle = "Home Page";
     /* 1. Left and Up */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
         /* Moves 200px Left (Negative X) and 150px Up (Negative Y) from the center */
-        transform: translate(-200px, -150px);
+        transform: translate(-250px, -200px);
         transition-delay: 0.1s;
+        color: #0091e1;
+        /* Set size and color */
+        width: 32px;
+        height: 32px;
     }
 
     /* 2. Far Right */
@@ -64,13 +71,20 @@ const pageTitle = "Home Page";
         /* Moves 350px Right (Positive X) and 20px Up (Negative Y) from the center */
         transform: translate(350px, -20px);
         transition-delay: 0.2s;
+        /* Set size and color */
+        width: 32px;
+        height: 32px;
     }
 
     /* 3. Down and Left (Opposite of 1) */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
         /* Moves 100px Left and 250px Down (Positive Y) from the center */
-        transform: translate(-100px, 250px);
+        transform: translate(-100px, 200px);
         transition-delay: 0.3s;
+        color: #0091e1;
+        /* Set size and color */
+        width: 32px;
+        height: 32px;
     }
 
     /* 4. Far Up */
@@ -80,39 +94,43 @@ const pageTitle = "Home Page";
         transition-delay: 0.4s;
     }
 
-    /* 5. Near Right */
+    /* 5. Down and left */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
         /* Moves 150px Right and 100px Down from the center */
-        transform: translate(150px, 100px);
+        transform: translate(-300px, 250px);
         transition-delay: 0.5s;
     }
 
     /* 6. Up, slightly centered */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
         /* Moves 20px Right and 150px Up from the center */
-        transform: translate(20px, -150px);
+        transform: translate(50px, -200px);
         transition-delay: 0.6s;
     }
 
     /* 7. Far Down */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
         /* Moves 100px Right and 350px Down from the center */
-        transform: translate(100px, 350px);
+        transform: translate(100px, 300px);
         transition-delay: 0.7s;
+        color: #0091e1;
     }
 
     /* 8. Just outside the left border */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
         /* Moves 300px Left and 50px Down from the center */
-        transform: translate(-300px, 50px);
+        transform: translate(-350px, 50px);
         transition-delay: 0.8s;
     }
 
     /* 9. Down and Right */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
         /* Moves 250px Right and 250px Down from the center */
-        transform: translate(250px, 250px);
+        transform: translate(250px, 200px);
         transition-delay: 0.9s;
+        /* Set size and color */
+        width: 128px;
+        height: 128px;
     }
 
     /* 10. Up and Right */
@@ -120,5 +138,6 @@ const pageTitle = "Home Page";
         /* Moves 500px Right (Positive X) and 500px Up (Negative Y) from the center */
         transform: translate(300px, -300px);
         transition-delay: 1s;
+        color: #0091e1;
     }
 </style>
