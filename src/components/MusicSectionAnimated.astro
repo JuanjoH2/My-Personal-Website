@@ -39,7 +39,6 @@ const musicIcons = [
 <style>
     /*
     * MUSICAL COMPOSITIONS SECTION STYLES
-    * These styles are now scoped to this component!
     */
     .music-icon {
         /* Set the starting position */
@@ -54,72 +53,64 @@ const musicIcons = [
         height: 64px;
         color: white;
 
-        /* Set the animation */
-        transition: transform 1s ease-out;
+        /* Set the animation: MUST include the transition property for smooth return */
+        transition:
+            transform 1s ease-out,
+            width 1s ease-out,
+            height 1s ease-out,
+            color 1s ease-out;
     }
 
-    /* NOTE: We must use the nth-of-type selector on the music-icon class
-       because the Fragment wrapper means the SVG is the only element 
-       of that 'type' (SVG) immediately following #compositionsDiv. 
-       This structure works with your original CSS.
+    /* 💡 REVERTED SELECTOR: Target the subtitleDiv for hover, 
+       then use the sibling combinator (~) to affect the icons.
     */
 
     /* 1. Left and Up */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
-        /* Moves 200px Left (Negative X) and 150px Up (Negative Y) from the center */
         transform: translate(-250px, -200px);
         transition-delay: 0.1s;
         color: #0091e1;
-        /* Set size and color */
         width: 32px;
         height: 32px;
     }
 
     /* 2. Far Right */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(3) {
-        /* Moves 350px Right (Positive X) and 20px Up (Negative Y) from the center */
         transform: translate(350px, -20px);
         transition-delay: 0.2s;
-        /* Set size and color */
         width: 32px;
         height: 32px;
     }
 
     /* 3. Down and Left (Opposite of 1) */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
-        /* Moves 100px Left and 250px Down (Positive Y) from the center */
         transform: translate(-100px, 200px);
         transition-delay: 0.3s;
         color: #0091e1;
-        /* Set size and color */
         width: 32px;
         height: 32px;
     }
 
     /* 4. Far Up */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(5) {
-        /* Moves 50px Left and 300px Up from the center */
         transform: translate(-50px, -300px);
         transition-delay: 0.4s;
     }
 
     /* 5. Down and left */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
-        /* Moves 150px Right and 100px Down from the center */
         transform: translate(-300px, 250px);
         transition-delay: 0.5s;
     }
 
     /* 6. Up, slightly centered */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
-        /* Moves 20px Right and 150px Up from the center */
         transform: translate(50px, -200px);
         transition-delay: 0.6s;
     }
 
     /* 7. Far Down */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
-        /* Moves 100px Right and 350px Down from the center */
         transform: translate(100px, 300px);
         transition-delay: 0.7s;
         color: #0091e1;
@@ -127,24 +118,20 @@ const musicIcons = [
 
     /* 8. Just outside the left border */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
-        /* Moves 300px Left and 50px Down from the center */
         transform: translate(-350px, 50px);
         transition-delay: 0.8s;
     }
 
     /* 9. Down and Right */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
-        /* Moves 250px Right and 250px Down from the center */
         transform: translate(250px, 200px);
         transition-delay: 0.9s;
-        /* Set size and color */
         width: 128px;
         height: 128px;
     }
 
     /* 10. Up and Right */
     #compositionsDiv:hover ~ .music-icon:nth-of-type(11) {
-        /* Moves 500px Right (Positive X) and 500px Up (Negative Y) from the center */
         transform: translate(300px, -300px);
         transition-delay: 1s;
         color: #0091e1;
