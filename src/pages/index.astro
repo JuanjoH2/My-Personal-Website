@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import MusicSectionAnimated from "../components/MusicSectionAnimated.astro";
 import ThoughtsSectionAnimated from "../components/ThoughtsSectionAnimated.astro";
+import NewsletterSectionAnimated from "../components/NewsletterSectionAnimated.astro";
 import "../styles/global.css";
 const pageTitle = "Home Page";
 const thoughtsText =
@@ -10,15 +11,8 @@ const thoughtsText =
 
 <BaseLayout pageTitle={pageTitle}>
     <MusicSectionAnimated />
-
     <ThoughtsSectionAnimated text={thoughtsText} />
-
-    <section id="newsletter">
-        <div class="subtitleDiv">
-            <h2>Newsletter</h2>
-            <button onclick="window.location.href='/newsletter'"> </button>
-        </div>
-    </section>
+    <NewsletterSectionAnimated />
     <section id="code">
         <div class="subtitleDiv">
             <h2>Code projects_</h2>

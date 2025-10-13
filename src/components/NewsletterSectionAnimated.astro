@@ -1,0 +1,145 @@
+---
+import Mail from "../assets/mail.svg";
+
+// Define the icons in an array to easily loop and render
+const mailIcons = [Mail, Mail, Mail, Mail, Mail, Mail, Mail, Mail, Mail, Mail];
+---
+
+<section id="newsletter">
+    <div id="newsletterDiv" class="subtitleDiv">
+        <h2>Newsletter</h2>
+        <button onclick="window.location.href='/newsletter'"> </button>
+    </div>
+
+    {
+        mailIcons.map((Icon, index) => (
+            <Fragment>
+                <Icon class="mail-icon" />
+            </Fragment>
+        ))
+    }
+</section>
+
+<style>
+    /*
+    * BASE STYLES
+    */
+    #newsletter {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .mail-icon {
+        /* Set the starting position to be OFF-SCREEN: down-left corner */
+        translate: -50% -50%;
+        position: absolute;
+        z-index: -1;
+        /* Start completely off-screen using percentages */
+        left: -20%;
+        bottom: -20%;
+
+        /* Set initial size and color */
+        width: 32px;
+        height: 32px;
+        color: white;
+
+        /* Set the transition properties for smooth animation out and back in */
+        transition:
+            transform 1.5s ease-out,
+            width 0.5s ease-out,
+            height 0.5s ease-out,
+            color 0.5s ease-out;
+    }
+
+    /*
+    * HOVER ANIMATION: Shoot diagonally up-right and zoom out.
+    * We use large, negative translation percentages to push them far off-screen.
+    * NOTE: A translate of 200% means moving 2x the element's width/height.
+    * We need to combine large negative X and Y values relative to the viewport/section.
+    * Since the icons are positioned with `left: -20%; bottom: -20%;`, we need huge 
+    * positive X and negative Y transforms to push them to the top-right.
+    */
+
+    /* 1. Slow and Far (Up-Right) */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(2) {
+        /* Travels: 150vw Right, 150vh Up */
+        transform: translate(150vw, -150vh);
+        transition-delay: 0.1s;
+        color: #0091e1;
+        width: 64px;
+        height: 64px;
+    }
+
+    /* 2. Fast and Further (Zoom-by) */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(3) {
+        /* Travels: 180vw Right, 180vh Up */
+        transform: translate(180vw, -180vh);
+        transition-delay: 0.2s;
+        width: 128px;
+        height: 128px;
+    }
+
+    /* 3. Short and Close */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(4) {
+        /* Travels: 100vw Right, 100vh Up (Guaranteed to cross the entire screen) */
+        transform: translate(120vw, -100vh);
+        transition-delay: 0.3s;
+        color: #0091e1;
+        width: 48px;
+        height: 48px;
+    }
+
+    /* 4. Very Far and Slow */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(5) {
+        /* Travels: 200vw Right, 200vh Up (Well off-screen) */
+        transform: translate(200vw, -200vh);
+        transition-delay: 0.5s;
+        transition-duration: 2s;
+    }
+
+    /* 5. Wide arc */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(6) {
+        /* Travels: 150vw Right, 75vh Up (Shallower angle) */
+        transform: translate(150vw, -75vh);
+        transition-delay: 0.7s;
+    }
+
+    /* 6. Delayed Zoom */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(7) {
+        /* Travels: 120vw Right, 170vh Up (Steeper angle) */
+        transform: translate(120vw, -170vh);
+        transition-delay: 0.9s;
+        color: #0091e1;
+    }
+
+    /* 7. Close and Fast */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(8) {
+        transform: translate(120vw, -120vh);
+        transition-delay: 1.1s;
+        width: 96px;
+        height: 96px;
+    }
+
+    /* 8. Far and Blue */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(9) {
+        transform: translate(190vw, -190vh);
+        transition-delay: 1.3s;
+        color: #0091e1;
+    }
+
+    /* 9. Medium arc */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(10) {
+        transform: translate(130vw, -160vh);
+        transition-delay: 1.5s;
+    }
+
+    /* 10. The final, large one */
+    #newsletterDiv:hover ~ .mail-icon:nth-of-type(11) {
+        transform: translate(250vw, -250vh);
+        transition-delay: 1.7s;
+        transition-duration: 2.5s;
+        width: 150px;
+        height: 150px;
+        color: #0091e1;
+    }
+</style>
