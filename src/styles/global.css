@@ -107,14 +107,7 @@ section {
     cursor: url('../assets/circle2.svg') 8 8, pointer;
 }
 
-/* This rule targets ONLY h1 elements that are descendants of .titleDiv */
-h1 {
-    font-weight: normal;
-    text-align: left;
-    font-size: 64px;
-}
-
-/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
+h1,
 h2 {
     /* Corrected margin syntax: multiple values are separated by spaces, not commas */
     font-weight: normal;
@@ -122,7 +115,7 @@ h2 {
     font-size: 64px;
 }
 
-/* This rule targets ONLY h2 elements that are descendants of .titleDiv */
+
 h3 {
     /* Corrected margin syntax: multiple values are separated by spaces, not commas */
     color: white;
@@ -165,4 +158,63 @@ h3 {
     z-index: 10;
     /* Keep this at 10 to be above the backdrop's z-index of 9 */
     /* ... existing styles ... */
+}
+
+/**
+* DISPLAY FOR MOBILE
+*/
+@media (max-width: 600px) {
+
+    h1,
+    h2 {
+        font-weight: normal;
+        text-align: center;
+        font-size: 32px;
+    }
+
+    h3 {
+        /* Corrected margin syntax: multiple values are separated by spaces, not commas */
+        color: white;
+        font-weight: normal;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .titleDiv {
+        /* Applies 16px rounded corners */
+        border-radius: 16px;
+        /* Applies a 1px solid white border */
+        border: 1px solid white;
+        /* Makes the background of divs HEX #0e0e0e */
+        background-color: black;
+        /* Width of the Div (box) */
+        width: 256px;
+        /* Height of the Div (box) */
+        height: 128px;
+        /* This centers the Div (box) and removes other margins */
+        margin: 0 auto;
+        /* These attributes are for making the content fully centered */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .subtitleDiv {
+        /* Applies 16px rounded corners */
+        border-radius: 16px;
+        /* Applies a 1px solid white border */
+        border: 1px solid white;
+        /* Makes the background of divs HEX #0e0e0e */
+        background-color: black;
+        /* Width of the Div (box) */
+        width: 256px;
+        /* Height of the Div (box) */
+        height: 128px;
+        /* These attributes are for making the content fully centered */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        position: relative;
+    }
 }

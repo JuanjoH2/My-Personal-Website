@@ -136,7 +136,7 @@ const fullText = text;
         position: relative;
 
         width: 1024px;
-        height: 734px;
+        height: 100vh;
 
         /* Crucially, permanently clip any content that goes beyond this height */
         overflow: hidden;
@@ -177,6 +177,35 @@ const fullText = text;
         }
         50% {
             opacity: 1;
+        }
+    }
+
+    /* DISPLAY FOR MOBILE */
+    @media (max-width: 600px) {
+        .text-container {
+            position: relative;
+
+            width: 768px;
+            height: 640px;
+
+            /* Crucially, permanently clip any content that goes beyond this height */
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+        }
+
+        .typing-text {
+            position: absolute;
+            top: 0px;
+            left: 0px; /* Keep left offset for text readability */
+            height: 100%;
+            width: 100%;
+            padding: 32px;
+            font-size: 16px;
+            color: #0091e1;
+            max-width: calc(100% - 64px);
         }
     }
 </style>
