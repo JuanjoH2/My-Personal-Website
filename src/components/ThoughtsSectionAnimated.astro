@@ -134,9 +134,10 @@ const fullText = text;
     /* The text-container is the viewport/bounding box */
     .text-container {
         position: relative;
-        /* Set the desired height for the entire thoughts box */
-        height: 478px;
-        width: 768px;
+
+        width: 1024px;
+        height: 734px;
+
         /* Crucially, permanently clip any content that goes beyond this height */
         overflow: hidden;
 
@@ -160,7 +161,7 @@ const fullText = text;
 
     /* 💡 Cursor Element Styling */
     #cursor {
-        display: inline-block;
+        display: none;
         width: 3px;
         height: 1.2em; /* Height should match font size */
         background-color: white;
