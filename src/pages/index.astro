@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import MusicSectionAnimated from "../components/MusicSectionAnimated.astro";
 import ThoughtsSectionAnimated from "../components/ThoughtsSectionAnimated.astro";
 import NewsletterSectionAnimated from "../components/NewsletterSectionAnimated.astro";
+import CodeSectionAnimated from "../components/CodeSectionAnimated.astro";
 import "../styles/global.css";
 const pageTitle = "Home Page";
 const thoughtsText =
@@ -13,10 +14,5 @@ const thoughtsText =
     <MusicSectionAnimated />
     <ThoughtsSectionAnimated text={thoughtsText} />
     <NewsletterSectionAnimated />
-    <section id="code">
-        <div class="subtitleDiv">
-            <h2>Code projects_</h2>
-            <button onclick="window.location.href='/code'"> </button>
-        </div>
-    </section>
+    <CodeSectionAnimated />
 </BaseLayout>
