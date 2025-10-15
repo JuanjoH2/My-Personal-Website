@@ -9,7 +9,7 @@ html {
     /* Applies the Montserrat font-family to the text */
     font-family: 'Montserrat', sans-serif;
     /* Personalized cursor */
-    cursor: url('../assets/circle.svg') 8 8, auto;
+    cursor: url('../assets/icons/circle.svg') 8 8, auto;
 }
 
 /* ========================================================= */
@@ -104,7 +104,7 @@ section {
     background-color: black;
 
     position: absolute;
-    cursor: url('../assets/circle2.svg') 8 8, pointer;
+    cursor: url('../assets/icons/circle2.svg') 8 8, pointer;
 }
 
 h1,
@@ -137,7 +137,7 @@ h3 {
     background-color: rgba(0, 0, 0, 0.64);
 
     /* Ensure it is below the menu (z-index: 10) but above everything else */
-    z-index: 9;
+    z-index: 8;
 
     /* Initially hide the overlay. Use opacity and transition for smooth fade. */
     opacity: 0;

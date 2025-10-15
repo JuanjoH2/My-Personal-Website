@@ -1,0 +1,64 @@
+[
+    {
+        "slug": "yidali",
+        "title": "Yidali",
+        "image": "../assets/images/Yidali.jpg",
+        "audioFile": "../assets/audio/Yidali.mp3",
+        "year": 2023,
+        "duration": "3:33",
+        "description": "Description of the piece...",
+        "isAlternate": false
+    },
+    {
+        "slug": "ty",
+        "title": "Ty",
+        "image": "../assets/images/Ty.jpg",
+        "audioFile": "../assets/audio/Ty.mp3",
+        "year": 2024,
+        "duration": "4:13",
+        "description": "Description of the piece...",
+        "isAlternate": false
+    },
+    {
+        "slug": "ty-piano",
+        "title": "Ty (piano version)",
+        "image": "../assets/images/Ty_pv.jpg",
+        "audioFile": "../assets/audio/Ty_pv.mp3",
+        "year": 2024,
+        "duration": "4:13",
+        "description": "Description of the piece...",
+        "isAlternate": true,
+        "parentId": "ty"
+    },
+    {
+        "slug": "fragmentos-de-cristal",
+        "title": "Fragmentos de Cristal",
+        "image": "../assets/images/FragmentosDeCristal.jpg",
+        "audioFile": "../assets/audio/FragmentosDeCristal.mp3",
+        "year": 2025,
+        "duration": "6:54",
+        "description": "Description of the piece...",
+        "isAlternate": false
+    },
+    {
+        "slug": "chemins-croises",
+        "title": "Chemins croisés",
+        "image": "../assets/images/CheminsCroises.jpg",
+        "audioFile": "../assets/audio/CheminsCroises.mp3",
+        "year": 2025,
+        "duration": "4:39",
+        "description": "Description of the piece...",
+        "isAlternate": false
+    },
+    {
+        "slug": "chemins-croises-piano",
+        "title": "Chemins Croisés (piano version)",
+        "image": "../assets/images/CheminsCroises_pv.jpg",
+        "audioFile": "../assets/audio/CheminsCroises_pv.mp3",
+        "year": 2025,
+        "duration": "4:39",
+        "description": "Description of the piece...",
+        "isAlternate": true,
+        "parentId": "chemins-croises"
+    }
+]
