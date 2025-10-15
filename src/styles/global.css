@@ -38,8 +38,7 @@ section {
     width: 512px;
     /* Height of the Div (box) */
     height: 222px;
-    /* This centers the Div (box) and removes other margins */
-    margin: 0 auto;
+    padding: 32px;
     /* These attributes are for making the content fully centered */
     display: flex;
     justify-content: center;
@@ -61,8 +60,9 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-
+    flex-direction: column;
     position: relative;
+    padding: 32px;
 }
 
 
@@ -122,6 +122,14 @@ h3 {
     font-weight: normal;
     text-align: center;
     font-size: 16px;
+}
+
+h4 {
+    /* Corrected margin syntax: multiple values are separated by spaces, not commas */
+    color: white;
+    font-weight: normal;
+    text-align: center;
+    font-size: 12px;
 }
 
 /* BACKDROP STYLES */

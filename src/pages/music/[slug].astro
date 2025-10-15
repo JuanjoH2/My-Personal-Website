@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import MusicLayout from "../../layouts/MusicLayout.astro";
 import musicData from "../../data/music.json";
 
 const { piece } = Astro.props;
@@ -16,56 +16,4 @@ export async function getStaticPaths() {
 }
 ---
 
-<BaseLayout title={piece.title}>
-    <section class="piece-detail">
-        <a href="/music" class="back-link">← Back to All Pieces</a>
-
-        <h1>{piece.title}</h1>
-        <div class="content-wrapper">
-            <div class="audio-player-container">
-                <img
-                    src={piece.image}
-                    alt={`Album art for ${piece.title}`}
-                    class="piece-art"
-                />
-                <audio controls>
-                    <source src={piece.audioFile} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-
-            <div class="piece-info">
-                <h2>Information</h2>
-                <p><strong>Year:</strong> {piece.year}</p>
-                <p><strong>Duration:</strong> {piece.duration}</p>
-                <p class="piece-description">{piece.description}</p>
-            </div>
-        </div>
-
-        {
-            alternatePieces.length > 0 && (
-                <div class="alternate-versions">
-                    <h2>Alternate Versions</h2>
-                    <div class="alternate-grid">
-                        {alternatePieces.map((alternate) => (
-                            <div class="alternate-card">
-                                <h3>{alternate.title}</h3>
-                                <img
-                                    src={alternate.image}
-                                    alt={`Cover for ${alternate.title}`}
-                                />
-                                <audio controls>
-                                    <source
-                                        src={alternate.audioFile}
-                                        type="audio/mpeg"
-                                    />
-                                </audio>
-                                <p>{alternate.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )
-        }
-    </section>
-</BaseLayout>
+<MusicLayout piece={piece} />

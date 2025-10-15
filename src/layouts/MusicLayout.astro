@@ -1,0 +1,105 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import musicData from "../data/music.json";
+import "../styles/global.css";
+
+const { piece } = Astro.props;
+const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <title>{piece.title}</title>
+    </head>
+    <body>
+        <div id="backdrop" class="menu-backdrop"></div>
+        <Header />
+        <section id="mainPiece">
+            <div class="piece-grid">
+                <div class="image-div">
+                    <img
+                        src={piece.image}
+                        alt={`Album art for ${piece.title}`}
+                        class="piece-art"
+                    />
+                </div>
+                <audio controls class="piece-audio">
+                    <source src={piece.audioFile} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </section>
+        <section id="description">
+            <div class="subtitleDiv">
+                <h3>About the piece</h3>
+                <h4>
+                    {piece.description}
+                </h4>
+            </div>
+        </section>
+        {
+            alternatePieces.length > 0 && (
+                <section id="alternativePiece">
+                    <div class="piece-grid">
+                        <div class="image-div">
+                            <img
+                                src={alternatePieces[0].image}
+                                alt={`Album art for ${alternatePieces[0].title}`}
+                                class="piece-art"
+                            />
+                        </div>
+                        <audio controls class="piece-audio">
+                            <source
+                                src={alternatePieces[0].audioFile}
+                                type="audio/mpeg"
+                            />
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </section>
+            )
+        }
+        <slot />
+        <Footer />
+    </body>
+</html>
+
+<style>
+    .piece-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        width: 512px;
+        height: auto;
+        padding: 32px;
+    }
+    .image-div {
+        background-color: black;
+        border: 1px solid white;
+        border-radius: 16px;
+        width: 512px;
+        padding: 32px;
+    }
+    .piece-art {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    .piece-audio {
+        width: 100%;
+    }
+    .subtitleDiv {
+    }
+</style>
