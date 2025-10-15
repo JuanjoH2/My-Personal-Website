@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import musicData from "../../data/music.json";
+
+const { piece } = Astro.props;
+const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
+
+// DYNAMIC ROUTING: Tells Astro which pages to build
+export async function getStaticPaths() {
+    return musicData.map((piece) => ({
+        // The URL will be /music/celestial-waltz, /music/cyberpunk-dreams, etc.
+        params: { slug: piece.slug },
+        // Pass the entire piece data to the page component (props)
+        props: { piece },
+    }));
+}
+---
+
+<BaseLayout title={piece.title}>
+    <section class="piece-detail">
+        <a href="/music" class="back-link">← Back to All Pieces</a>
+
+        <h1>{piece.title}</h1>
+        <div class="content-wrapper">
+            <div class="audio-player-container">
+                <img
+                    src={piece.image}
+                    alt={`Album art for ${piece.title}`}
+                    class="piece-art"
+                />
+                <audio controls>
+                    <source src={piece.audioFile} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <div class="piece-info">
+                <h2>Information</h2>
+                <p><strong>Year:</strong> {piece.year}</p>
+                <p><strong>Duration:</strong> {piece.duration}</p>
+                <p class="piece-description">{piece.description}</p>
+            </div>
+        </div>
+
+        {
+            alternatePieces.length > 0 && (
+                <div class="alternate-versions">
+                    <h2>Alternate Versions</h2>
+                    <div class="alternate-grid">
+                        {alternatePieces.map((alternate) => (
+                            <div class="alternate-card">
+                                <h3>{alternate.title}</h3>
+                                <img
+                                    src={alternate.image}
+                                    alt={`Cover for ${alternate.title}`}
+                                />
+                                <audio controls>
+                                    <source
+                                        src={alternate.audioFile}
+                                        type="audio/mpeg"
+                                    />
+                                </audio>
+                                <p>{alternate.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+    </section>
+</BaseLayout>

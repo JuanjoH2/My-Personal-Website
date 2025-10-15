@@ -1,0 +1,49 @@
+---
+const { title, imageSrc, slug } = Astro.props;
+const pieceUrl = `/music/${slug}`;
+---
+
+<div class="music-card-div">
+    <a href={pieceUrl} class="music-card-link">
+        <div class="music-card">
+            <img src={imageSrc} alt={`Cover image for ${title}`} />
+        </div>
+    </a>
+</div>
+
+<style>
+    .music-card-div {
+        transition: transform 0.3s ease;
+        background-color: black;
+        border: 1px solid white;
+        border-radius: 16px;
+        width: 100%;
+    }
+    .music-card {
+        /* Styles for the square box (e.g., fixed ratio, shadow) */
+        width: 100%;
+        aspect-ratio: 1 / 1; /* Makes it a perfect square */
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+    .music-card-div:hover {
+        transform: scale(1.05);
+        cursor:
+            url("../assets/icons/circle2.svg") 8 8,
+            pointer;
+    }
+    .music-card img {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        object-fit: cover;
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+        cursor:
+            url("../assets/icons/circle2.svg") 8 8,
+            pointer;
+    }
+</style>

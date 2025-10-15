@@ -1,0 +1,70 @@
+---
+import MusicCard from "../../components/MusicCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import musicData from "../../data/music.json";
+import "../../styles/global.css";
+
+const pageTitle = "Music Page";
+const mainPieces = musicData.filter((piece) => !piece.isAlternate);
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <section class="music-index">
+        <div class="card-grid">
+            {
+                mainPieces.map((piece) => (
+                    <MusicCard imageSrc={piece.image} slug={piece.slug} />
+                ))
+            }
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    section {
+        height: fit-content;
+    }
+    .music-index {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card-grid {
+        display: flex;
+        align-items: flex-start;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+        position: relative;
+        width: 90vw;
+        max-width: 1200px;
+        padding: 32px 0;
+    }
+
+    .card-grid > :global(.music-card-div) {
+        flex-basis: calc(25% - 24px);
+        min-width: 200px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 900px) {
+        /* Two columns */
+        .card-grid > :global(.music-card-div) {
+            flex-basis: calc(50% - 16px); /* Two cards per row with gap */
+        }
+    }
+
+    @media (max-width: 500px) {
+        /* One column */
+        .card-grid {
+            gap: 16px;
+            width: 70vw;
+        }
+        .card-grid > :global(.music-card-div) {
+            flex-basis: 100%;
+        }
+    }
+</style>
