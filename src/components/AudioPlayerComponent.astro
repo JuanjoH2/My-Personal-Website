@@ -1,0 +1,190 @@
+---
+export interface Props {
+    audioFile: string;
+}
+
+const { audioFile } = Astro.props;
+const uniqueId = audioFile.replace(/[^a-zA-Z0-9]/g, "-");
+---
+
+<div class="custom-audio-wrapper">
+    <audio class="piece-audio" id={`audio-${uniqueId}`}>
+        <source src={audioFile} type="audio/mpeg" />
+    </audio>
+
+    <button
+        id={`play-button-${uniqueId}`}
+        class="audio-control-btn"
+        aria-label="Play/Pause"
+    >
+        ▶
+    </button>
+
+    <input
+        type="range"
+        id={`progress-bar-${uniqueId}`}
+        value="0"
+        min="0"
+        max="100"
+        class="audio-progress-bar"
+    />
+
+    <span id={`time-display-${uniqueId}`}>0:00 / 0:00</span>
+</div>
+
+<script define:vars={{ uniqueId }}>
+    const audio = document.getElementById(`audio-${uniqueId}`);
+    const playButton = document.getElementById(`play-button-${uniqueId}`);
+    const progressBar = document.getElementById(`progress-bar-${uniqueId}`);
+    const timeDisplay = document.getElementById(`time-display-${uniqueId}`);
+    if (audio && playButton && progressBar && timeDisplay) {
+        // --- Utility Function for Time Formatting ---
+        const formatTime = (time) => {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60)
+                .toString()
+                .padStart(2, "0");
+            return `${minutes}:${seconds}`;
+        };
+
+        const updateProgressVisuals = (currentTime, duration) => {
+            if (duration > 0) {
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.setProperty(
+                    "--progress-width",
+                    `${progressPercent}%`,
+                );
+            }
+            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+        }; // Initial setup on load
+
+        const setupPlayer = () => {
+            progressBar.max = audio.duration.toString();
+            updateProgressVisuals(audio.currentTime, audio.duration);
+        };
+        audio.addEventListener("loadedmetadata", setupPlayer);
+        audio.addEventListener("canplay", setupPlayer);
+
+        audio.addEventListener("timeupdate", () => {
+            progressBar.value = audio.currentTime.toString();
+            updateProgressVisuals(audio.currentTime, audio.duration);
+        });
+
+        progressBar.addEventListener("input", () => {
+            const newTime = parseFloat(progressBar.value);
+            audio.currentTime = newTime;
+            updateProgressVisuals(newTime, audio.duration);
+        });
+
+        playButton.textContent = "▶";
+        playButton.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playButton.textContent = "❚❚";
+            } else {
+                audio.pause();
+                playButton.textContent = "▶";
+            }
+        });
+        audio.addEventListener("ended", () => {
+            playButton.textContent = "▶";
+
+            progressBar.value = "0";
+            progressBar.style.setProperty("--progress-width", "0%");
+
+            updateProgressVisuals(0, audio.duration);
+        });
+    }
+</script>
+
+<style>
+    /* --- Custom Audio Player Styles --- */
+    #main-audio-player {
+        visibility: hidden;
+        position: absolute;
+        height: 0;
+        width: 0;
+    }
+
+    .custom-audio-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+        height: 40px;
+        background-color: black;
+        border: 1px solid white;
+        border-radius: 8px;
+        padding: 0 16px;
+    }
+
+    .audio-control-btn {
+        background: none;
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        font-size: 16px;
+        transition: color 0.2s ease;
+    }
+
+    .audio-control-btn:hover {
+        color: #0091e1;
+    }
+
+    /* --- Custom Progress Bar Styles --- */
+    .audio-progress-bar {
+        --progress-width: 0%;
+        --thumb-width: 14px;
+
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        height: 8px;
+        flex-grow: 1;
+        margin: 0;
+        border-radius: 4px;
+
+        background: linear-gradient(
+            to right,
+            #0091e1 0%,
+            #0091e1 var(--progress-width),
+            #555 var(--progress-width),
+            #555 100%
+        );
+
+        background-size: calc(100% - var(--thumb-width)) 100%;
+        background-position: calc(var(--thumb-width) / 2) 0;
+        background-repeat: no-repeat;
+    }
+
+    .audio-progress-bar::-webkit-slider-runnable-track {
+        background: transparent;
+        height: 4px;
+        border-radius: 2px;
+    }
+
+    .audio-progress-bar::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        margin-top: -5px;
+        height: var(--thumb-width);
+        width: var(--thumb-width);
+        border-radius: 50%;
+        background: #0091e1;
+        box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    /* --- Mozilla (Firefox) Fix --- */
+    .audio-progress-bar::-moz-range-progress {
+        background: #0091e1;
+        height: 4px;
+        border-radius: 2px;
+    }
+    .audio-progress-bar::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        border-radius: 50%;
+        background: #0091e1;
+        border: none;
+    }
+</style>

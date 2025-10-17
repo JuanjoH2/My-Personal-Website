@@ -15,49 +15,6 @@ import Navigation from "./Navigation.astro";
     </div>
 </header>
 
-<style>
-    .main-header {
-        /* Pins the header to the top of the viewport */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 64px;
-        /* Defines the height of the header (64px) */
-
-        /* Ensure the header is always on top of other content */
-        z-index: 100;
-
-        /* Basic styling for visibility */
-        background-color: #1e1f20, 0;
-
-        /* Flex alignment for logo placement */
-        display: flex;
-
-        /* Vertically center the logo */
-        align-items: center;
-
-        justify-content: space-between;
-    }
-
-    /* Style for the SVG/Logo element */
-    .logo {
-        height: 64px;
-        width: 64px;
-        display: block;
-        margin-top: 16px;
-        margin-left: 16px;
-        cursor:
-            url("../assets/icons/circle2.svg") 8 8,
-            pointer;
-    }
-
-    .menu {
-        margin-top: 16px;
-        margin-right: 16px;
-    }
-</style>
-
 <script defer is:inline>
     // 1. Get all necessary DOM elements
     const toggleButton = document.getElementById("menu-toggle"); // The button that opens the menu (hamburger icon)
@@ -117,3 +74,43 @@ import Navigation from "./Navigation.astro";
         backdrop.addEventListener("click", () => toggleMenu(true));
     }
 </script>
+
+<style>
+    .main-header {
+        /* Pins the header to the top of the viewport */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 64px;
+        /* Defines the height of the header (64px) */
+
+        /* Ensure the header is always on top of other content */
+        z-index: 100;
+
+        /* Basic styling for visibility */
+        background-color: #1e1f20, 0;
+
+        /* Flex alignment for logo placement */
+        display: flex;
+
+        /* Vertically center the logo */
+        align-items: center;
+
+        justify-content: space-between;
+    }
+
+    /* Style for the SVG/Logo element */
+    .logo {
+        height: 64px;
+        width: 64px;
+        display: block;
+        margin-top: 16px;
+        margin-left: 16px;
+    }
+
+    .menu {
+        margin-top: 16px;
+        margin-right: 16px;
+    }
+</style>

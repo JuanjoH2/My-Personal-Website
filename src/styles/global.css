@@ -1,6 +1,14 @@
 /* ========================================================= */
 /* GLOBAL STYLES                                             */
 /* ========================================================= */
+
+/* CURSOR */
+a,
+button,
+input {
+    cursor: url('../assets/icons/circle2.svg') 8 8, auto;
+}
+
 html {
     /* Applies the HEX #1e1f20 to the background of the body */
     background-color: #1E1F20;
@@ -105,7 +113,6 @@ section {
     background-color: black;
 
     position: absolute;
-    cursor: url('../assets/icons/circle2.svg') 8 8, pointer;
 }
 
 h1,

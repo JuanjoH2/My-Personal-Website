@@ -1,4 +1,5 @@
 ---
+import AudioPlayerComponent from "../components/AudioPlayerComponent.astro";
 import BackButtonComponent from "../components/BackButtonComponent.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -33,10 +34,7 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
                         class="piece-art"
                     />
                 </div>
-                <audio controls class="piece-audio">
-                    <source src={piece.audioFile} type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                </audio>
+                <AudioPlayerComponent audioFile={piece.audioFile} />
             </div>
             <div class="piece-info">
                 <h3>{piece.title}</h3>
@@ -63,13 +61,9 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
                                 class="piece-art"
                             />
                         </div>
-                        <audio controls class="piece-audio">
-                            <source
-                                src={alternatePieces[0].audioFile}
-                                type="audio/mpeg"
-                            />
-                            Your browser does not support the audio element.
-                        </audio>
+                        <AudioPlayerComponent
+                            audioFile={alternatePieces[0].audioFile}
+                        />
                     </div>
                     <div class="piece-info">
                         <h3>{alternatePieces[0].title}</h3>
@@ -107,18 +101,18 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
         object-fit: cover;
         border-radius: 8px;
     }
-    .piece-audio {
-        width: 100%;
-    }
+
     .piece-info {
         position: absolute;
         bottom: 32px;
         left: 32px;
     }
+
     h3,
     h4 {
         text-align: start;
     }
+
     .subtitleDiv {
         align-items: start;
     }
