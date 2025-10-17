@@ -13,7 +13,11 @@ const mainPieces = musicData.filter((piece) => !piece.isAlternate);
         <div class="card-grid">
             {
                 mainPieces.map((piece) => (
-                    <MusicCard imageSrc={piece.image} slug={piece.slug} />
+                    <MusicCard
+                        title={piece.title}
+                        imageSrc={piece.image}
+                        slug={piece.slug}
+                    />
                 ))
             }
         </div>

@@ -1,0 +1,29 @@
+---
+import Arrow from "../assets/icons/arrow.svg";
+
+const { href = "/" } = Astro.props;
+---
+
+<a href={href} class="navigation-arrow-a">
+    <Arrow class="navigation-arrow-icon" />
+</a>
+
+<style>
+    .navigation-arrow-a {
+        position: absolute;
+        left: 32px;
+    }
+    .navigation-arrow-icon {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        color: white;
+        transform: rotate(180deg);
+    }
+
+    .navigation-arrow-icon:hover {
+        width: 32px;
+        height: 32px;
+        color: #0091e1;
+    }
+</style>
