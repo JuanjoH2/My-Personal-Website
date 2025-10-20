@@ -1,0 +1,49 @@
+---
+export interface Props {
+    thought: {
+        slug: string;
+        data: {
+            title: string;
+        };
+    };
+}
+const { thought } = Astro.props as Props;
+const thoughtUrl = `/thoughts/${thought.slug}`;
+---
+
+<div class="thought-card-div">
+    <a href={thoughtUrl} class="thought-card-link">
+        <div class="thought-card">
+            <header>
+                <h2>{thought.data.title}</h2>
+            </header>
+        </div>
+    </a>
+</div>
+
+<style>
+    .thought-card-div {
+        transition: transform 0.3s ease;
+        background-color: black;
+        border: 1px solid white;
+        border-radius: 16px;
+        width: 100%;
+        text-decoration: none;
+    }
+    .thought-card {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16;
+        align-content: center;
+        height: 128px;
+    }
+    .thought-card h2 {
+        font-size: 64px;
+        color: white;
+        text-decoration: none;
+    }
+    .thought-card-div:hover {
+        transform: scale(1.02);
+    }
+</style>

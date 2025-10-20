@@ -1,0 +1,70 @@
+---
+import ThoughtCard from "../../components/thoughtsComponents/ThoughtCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const pageTitle = "Thoughts";
+const allThoughts = await getCollection("thoughts");
+
+// Sort posts by publication date (newest first)
+const sortedThoughts = allThoughts.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout pageTitle={pageTitle}>
+    <section class="thoughts-index">
+        <div class="card-grid">
+            {sortedThoughts.map((thought) => <ThoughtCard thought={thought} />)}
+        </div>
+    </section>
+</BaseLayout>
+
+<style>
+    section {
+        height: fit-content;
+    }
+    .thoughts-index {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+        position: relative;
+        width: 1024px;
+        padding: 32px;
+    }
+
+    .card-grid > :global(.thought-card-div) {
+        flex-basis: calc(25% - 24px);
+        min-width: 200px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 900px) {
+        /* Two columns */
+        .card-grid > :global(.thought-card-div) {
+            flex-basis: calc(50% - 16px); /* Two cards per row with gap */
+        }
+    }
+
+    @media (max-width: 500px) {
+        /* One column */
+        .card-grid {
+            gap: 16px;
+            width: 256px;
+        }
+        .card-grid > :global(.thought-card-div) {
+            flex-basis: 100%;
+        }
+    }
+</style>
