@@ -10,8 +10,10 @@ const { href = "/" } = Astro.props;
 
 <style>
     .navigation-arrow-a {
-        position: absolute;
+        position: fixed;
         left: 32px;
+        top: 50%;
+        z-index: 15;
     }
     .navigation-arrow-icon {
         position: absolute;
