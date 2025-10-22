@@ -56,23 +56,19 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
     .article-header {
         border-bottom: 1px solid white;
         padding-bottom: 1.5rem;
-        margin-bottom: 3rem; /* Increased space before content */
-        text-align: center; /* Center the title, date, and author */
+        margin-bottom: 64px;
+        text-align: center;
     }
 
     .article-header h1 {
-        font-size: 32px;
-        margin-top: 0.5rem;
-        line-height: 1.1;
-        font-weight: 700;
+        font-size: 64px;
+        text-align: center;
     }
 
     .article-header time,
     .article-header .author {
         display: block;
-        font-size: 0.9rem;
-        color: #0091e1;
-        margin-top: 0.25rem;
+        font-size: 16px;
     }
 
     /*
@@ -84,7 +80,6 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
         display: block;
         height: fit-content;
         line-height: 1.8;
-        font-size: 1.15rem;
     }
 
     /* Headings within the article body */
@@ -97,19 +92,14 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
         border-bottom: 1px solid #333;
     }
 
-    /* Lists and quotes */
-    .article-content :global(ul),
-    .article-content :global(ol) {
-        margin-bottom: 1.5rem;
-        padding-left: 1.5rem;
-    }
-
+    /* Blockquotes styling */
     .article-content :global(blockquote) {
         border-left: 4px solid #0091e1;
         margin: 2rem 0;
         padding: 0.5rem 1.5rem;
         background-color: #282c34; /* Lightly different background for contrast */
         font-style: italic;
+        border-radius: 8px;
     }
 
     /* Code blocks (important for technical posts) */
@@ -121,6 +111,27 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
         overflow-x: auto;
         font-size: 0.95rem;
         margin: 2rem 0;
+    }
+
+    /* Images inside article content */
+    .article-content :global(figure) {
+        /* Align the entire figure block (image + caption) in the center */
+        display: block;
+        margin: 3rem auto;
+        max-width: 60%; /* Match the max-width we set for the image */
+        text-align: center;
+    }
+    .article-content :global(figcaption) {
+        width: 100%;
+        font-style: italic; /* Makes it italic */
+        font-size: 16px;
+        color: #aaa; /* Grayed out for subtlety */
+    }
+    .article-content :global(figure img) {
+        width: 100%; /* Make the image fill the 50% max-width of the figure */
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 8px;
     }
 
     /* Mobile adjustments for the article */

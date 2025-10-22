@@ -11,9 +11,9 @@ We’ve all been there. We set a goal for ourselves, we get excited, we create a
 Apparently this is the story that many of my friends and I share in common. But what if I tell you that we can become invulnerable to disappointment?
 And the answer, my friend, lies in the very definition of disappointment: 
 
-[disappointment is the] “sadness or displeasure caused by the 
-nonfulfillment of one's hopes or expectations”
-(Oxford Languages)
+> [disappointment is the] “sadness or displeasure caused by the 
+> nonfulfillment of one's hopes or expectations”
+> (Oxford Languages)
 
 Let’s just focus on the highlighted part: “nonfulfillment of one’s hopes or expectations”. And add a pinch of stoicism.
 
@@ -26,10 +26,10 @@ Picture this: You just met a great new girl (or guy) you find very attractive. Y
 You start to go out together, and things are going great.
 Now, here’s where it gets interesting. Let’s propose two scenarios:
 
-Scenario A: You begin to create illusions and stories in your head about how great your relationship is going to be, you begin to fantasize with the idea that she feels the same way too, and a snowball of hopes and expectations starts to build up. 
+* **Scenario A:** You begin to create illusions and stories in your head about how great your relationship is going to be, you begin to fantasize with the idea that she feels the same way too, and a snowball of hopes and expectations starts to build up. 
 You’re unconsciously placing your own peace into something you cannot control at all: another person’s feelings and/or decisions.
 
-Scenario B: You acknowledge your feelings towards her and realize that you would like to try to begin a romantic relationship with her. But you also realize that it’s useless (literally, there’s no use for it; use-less) to create hopes or expectations out of something you cannot control. Instead, you decide to use that energy instead focusing on the things you do control: being your better self. Or as I stealed (like an artist) from Dr. Grace Lordan, developing your “Me+”.
+* **Scenario B:** You acknowledge your feelings towards her and realize that you would like to try to begin a romantic relationship with her. But you also realize that it’s useless (literally, there’s no use for it; use-less) to create hopes or expectations out of something you cannot control. Instead, you decide to use that energy instead focusing on the things you do control: being your better self. Or as I stealed (like an artist) from Dr. Grace Lordan, developing your “Me+”.
 
 And I’m not saying that we shouldn’t have hopes nor expectations. I’m saying that we should only set hopes and expectations for ourselves that we can control. Otherwise, it’s just a path to unease uncertainty, lack of peace, and yes, many times disappointment. Because we would’ve been trying to control or predict something we cannot control at all.
 
@@ -37,15 +37,15 @@ Don’t get me wrong. Of course you do get excited around her, and the idea of s
 But also, you acknowledge the limits of the things you can control, and never place your peace and happiness into something you cannot control.
 I mean, you wouldn’t bet all your savings into a random roulette, right? Then, why would you do that same thing with something as sacred as your peace and happiness?
 
-“Men are disturbed not by things, but by the views which they take of them.” 
--Epictetus
+> “Men are disturbed not by things, but by the views which they take of them.”
+> -Epictetus
 
 Let’s wrap this thought by diving into a very interesting (and powerful) topic that will add the final layer of protection for disappointment: perception.
 
-
-INSERT IMAGE!!
-
-“It all depends on the glasses from you watch things”
+<figure>
+    <img src="/images/thoughts/thought1.jpg" alt="It all depends on the glasses" />
+    <figcaption>It all depends on the glasses from you watch things</figcaption>
+</figure>
 
 Perception plays a huge role in our overall satisfaction (and dissatisfaction) of life. I mean, just take a look at Viktor Frankl's experience at the holocaust. He says in his book, Man’s Search for Meaning, that he could predict who was going to die in the next few days based on the meaning they gave to the situation (they were in Auschwitz).
 And you know what’s meaning? Well, literally is how you perceive the situation. And thanks to the experience of these men, we can see in a magnifying glass the impact of perception (meaning) in our life.

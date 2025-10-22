@@ -6,7 +6,7 @@
 a,
 button,
 input {
-    cursor: url('../assets/icons/circle2.svg') 8 8, auto;
+    cursor: url('/icons/circle2.svg') 8 8, auto;
 }
 
 html {
@@ -17,7 +17,7 @@ html {
     /* Applies the Montserrat font-family to the text */
     font-family: 'Montserrat', sans-serif;
     /* Personalized cursor */
-    cursor: url('../assets/icons/circle.svg') 8 8, auto;
+    cursor: url('/icons/circle.svg') 8 8, auto;
 }
 
 /* ========================================================= */

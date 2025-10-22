@@ -6,7 +6,7 @@
 a,
 button,
 input {
-    cursor: url('../assets/icons/circle2.svg') 8 8, auto;
+    cursor: url('/icons/circle2.svg') 8 8, auto;
 }
 
 html {
@@ -17,7 +17,7 @@ html {
     /* Applies the Montserrat font-family to the text */
     font-family: 'Montserrat', sans-serif;
     /* Personalized cursor */
-    cursor: url('../assets/icons/circle.svg') 8 8, auto;
+    cursor: url('/icons/circle.svg') 8 8, auto;
 }
 
 /* ========================================================= */
@@ -25,36 +25,41 @@ html {
 /* ========================================================= */
 
 h1 {
+    font-size: 32px;
     font-weight: bold;
     text-align: left;
-    font-size: 18px;
     margin-block-start: 8px;
     margin-block-end: 8px;
 }
 
 h2 {
+    font-size: 28px;
     font-weight: bold;
     text-align: left;
-    font-size: 14px;
     margin-block-start: 8px;
     margin-block-end: 8px;
 }
 
 
 h3 {
+    font-size: 24px;
     font-weight: bold;
     text-align: left;
-    font-size: 12px;
     margin-block-start: 8px;
     margin-block-end: 8px;
 }
 
 h4 {
+    font-size: 18px;
     font-weight: bold;
     text-align: left;
-    font-size: 11px;
     margin-block-start: 8px;
     margin-block-end: 8px;
+}
+
+p {
+    font-size: 18px;
+    font-weight: normal;
 }
 
 /* ========================================================= */
