@@ -40,7 +40,8 @@ const sortedThoughts = allThoughts.sort(
         flex-wrap: wrap;
         justify-content: center;
         position: relative;
-        width: 1024px;
+        width: 64vw;
+        height: fit-content;
         padding: 32px;
     }
 
@@ -50,18 +51,14 @@ const sortedThoughts = allThoughts.sort(
         box-sizing: border-box;
     }
 
-    @media (max-width: 900px) {
-        /* Two columns */
-        .card-grid > :global(.thought-card-div) {
-            flex-basis: calc(50% - 16px); /* Two cards per row with gap */
-        }
-    }
-
+    /**
+    * DISPLAY FOR MOBILE
+    */
     @media (max-width: 500px) {
         /* One column */
         .card-grid {
             gap: 16px;
-            width: 256px;
+            width: 350px;
         }
         .card-grid > :global(.thought-card-div) {
             flex-basis: 100%;

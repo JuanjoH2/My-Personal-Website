@@ -36,15 +36,21 @@ const thoughtUrl = `/thoughts/${thought.slug}`;
         width: 100%;
         position: relative;
         overflow: hidden;
-        border-radius: 16;
+        border-radius: 16px;
         align-content: center;
         height: 128px;
     }
     .thought-card h2 {
-        font-size: 64px;
+        font-size: 42px;
         color: white;
     }
     .thought-card-div:hover {
         transform: scale(1.02);
+    }
+    @media (max-width: 500px) {
+        .thought-card h2 {
+            font-size: 32px;
+            color: white;
+        }
     }
 </style>

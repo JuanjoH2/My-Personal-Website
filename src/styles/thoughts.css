@@ -99,24 +99,3 @@ p {
     /* Keep this at 10 to be above the backdrop's z-index of 9 */
     /* ... existing styles ... */
 }
-
-/* ========================================================= */
-/* DISPLAY FOR MOBILE                                        */
-/* ========================================================= */
-@media (max-width: 600px) {
-
-    h1,
-    h2 {
-        font-weight: normal;
-        text-align: center;
-        font-size: 32px;
-    }
-
-    h3 {
-        /* Corrected margin syntax: multiple values are separated by spaces, not commas */
-        color: white;
-        font-weight: normal;
-        text-align: center;
-        font-size: 16px;
-    }
-}
