@@ -38,7 +38,7 @@ But also, you acknowledge the limits of the things you can control, and never pl
 I mean, you wouldn’t bet all your savings into a random roulette, right? Then, why would you do that same thing with something as sacred as your peace and happiness?
 
 > “Men are disturbed not by things, but by the views which they take of them.”
-> -Epictetus
+> Epictetus
 
 Let’s wrap this thought by diving into a very interesting (and powerful) topic that will add the final layer of protection for disappointment: perception.
 

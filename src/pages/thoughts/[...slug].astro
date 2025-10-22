@@ -17,6 +17,12 @@ export async function getStaticPaths() {
 const { thought } = Astro.props;
 const { Content } = await thought.render();
 const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
+
+// READING TIME CALCULATION
+const WPM = 200;
+const strippedContent = thought.body.replace(/<[^>]*>|[^a-zA-Z0-9\s]/g, "");
+const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.ceil(wordCount / WPM);
 ---
 
 <ThoughtLayout title={thought.data.title}>
@@ -24,10 +30,15 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
         <header class="article-header">
             <h1>{thought.data.title}</h1>
 
-            <p class="author">By {thought.data.author}</p>
-            <time datetime={thought.data.pubDate.toISOString()}>
-                {formattedDate}
-            </time>
+            <div class="article-meta">
+                <p class="author">By {thought.data.author}</p>
+                <p>|</p>
+                <time datetime={thought.data.pubDate.toISOString()}>
+                    {formattedDate}
+                </time>
+                <p>|</p>
+                <p class="reading-time">{readingTime} min read</p>
+            </div>
         </header>
 
         <section class="article-content">
@@ -65,9 +76,17 @@ const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
         text-align: center;
     }
 
+    .article-meta {
+        display: flex; /* Enables horizontal alignment */
+        justify-content: center;
+        gap: 32px;
+        font-size: 16px;
+    }
+
     .article-header time,
     .article-header .author {
-        display: block;
+        display: flex;
+        align-items: center;
         font-size: 16px;
     }
 
