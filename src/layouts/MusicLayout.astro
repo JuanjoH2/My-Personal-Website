@@ -31,7 +31,7 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
                     <img
                         src={piece.image}
                         alt={`Album art for ${piece.title}`}
-                        class="piece-art"
+                        class="piece-image"
                     />
                 </div>
                 <AudioPlayerComponent audioFile={piece.audioFile} />
@@ -58,7 +58,7 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
                             <img
                                 src={alternatePieces[0].image}
                                 alt={`Album art for ${alternatePieces[0].title}`}
-                                class="piece-art"
+                                class="piece-image"
                             />
                         </div>
                         <AudioPlayerComponent
@@ -83,23 +83,28 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
         flex-direction: column;
         align-items: center;
         gap: 16px;
-        width: 24vw;
-        height: auto;
+        /* width: 24vw; */
+        width: max-content;
+        margin: 0 auto;
         padding: 32px;
     }
     .image-div {
-        background-color: black;
-        border: 1px solid white;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        position: relative;
+        overflow: hidden;
         border-radius: 16px;
-        width: 24vw;
-        padding: 16px;
     }
-    .piece-art {
+    .piece-image {
+        position: absolute;
         width: 100%;
         height: 100%;
-        aspect-ratio: 1/1;
         object-fit: cover;
-        border-radius: 8px;
+        top: 50%;
+        left: 50%;
+        border-radius: 16px;
+
+        transform: translate(-50%, -50%);
     }
 
     .piece-info {
@@ -115,5 +120,20 @@ const alternatePieces = musicData.filter((p) => p.parentId === piece.slug);
 
     .subtitleDiv {
         align-items: start;
+    }
+
+    /**
+    * DISPLAY FOR MOBILE
+    */
+    @media (max-width: 900px) {
+        .piece-grid {
+            width: fit-content;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .piece-grid {
+            width: fit-content;
+        }
     }
 </style>

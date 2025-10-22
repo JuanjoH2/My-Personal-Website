@@ -107,10 +107,12 @@ const uniqueId = audioFile.replace(/[^a-zA-Z0-9]/g, "-");
     }
 
     .custom-audio-wrapper {
+        font-size: 11px;
         display: flex;
         align-items: center;
         gap: 16px;
-        width: 100%;
+        /* width: 100%; */
+        width: 24vw;
         height: 40px;
         background-color: black;
         border: 1px solid white;
@@ -186,5 +188,20 @@ const uniqueId = audioFile.replace(/[^a-zA-Z0-9]/g, "-");
         border-radius: 50%;
         background: #0091e1;
         border: none;
+    }
+
+    /**
+    * DISPLAY FOR MOBILE
+    */
+    @media (max-width: 900px) {
+        .custom-audio-wrapper {
+            width: 50vw;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .custom-audio-wrapper {
+            width: 70vw;
+        }
     }
 </style>

@@ -5,7 +5,7 @@ const pieceUrl = `/music/${slug}`;
 
 <div class="music-card-div">
     <a href={pieceUrl} class="music-card-link">
-        <div class="music-card">
+        <div class="image-div">
             <img src={imageSrc} alt={`Cover image for ${title}`} />
         </div>
     </a>
@@ -19,7 +19,7 @@ const pieceUrl = `/music/${slug}`;
         border-radius: 16px;
         width: 100%;
     }
-    .music-card {
+    .image-div {
         /* Styles for the square box (e.g., fixed ratio, shadow) */
         width: 100%;
         aspect-ratio: 1 / 1; /* Makes it a perfect square */
@@ -30,13 +30,14 @@ const pieceUrl = `/music/${slug}`;
     .music-card-div:hover {
         transform: scale(1.05);
     }
-    .music-card img {
+    .image-div img {
         position: absolute;
         width: 80%;
         height: 80%;
         object-fit: cover;
         top: 50%;
         left: 50%;
+        border-radius: 16px;
 
         transform: translate(-50%, -50%);
     }
