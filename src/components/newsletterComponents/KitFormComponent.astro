@@ -64,7 +64,9 @@
         >
             <p>​</p>
         </div>
-    </div><style>
+    </div>
+
+    <style>
         .formkit-form[data-uid="3aea498f73"] * {
             box-sizing: border-box;
         }
@@ -649,5 +651,37 @@
             -ms-flex: 1 1 auto;
             flex: 1 1 auto;
         }
+
+        /* ------------------------------------------------ */
+        /* START OF CUSTOM STYLES */
+        /* ------------------------------------------------ */
+
+        :root {
+            --primary-blue: #0091e1;
+        }
+
+        /* 1. EMAIL INPUT HOVER/FOCUS STYLES */
+        .formkit-form[data-uid="3aea498f73"] .formkit-input:hover {
+            border-color: var(--primary-blue) !important;
+        }
+
+        .formkit-form[data-uid="3aea498f73"] .formkit-input:focus {
+            outline: none;
+            border-color: var(--primary-blue) !important;
+        }
+
+        /* 2. SUBSCRIBE BUTTON HOVER STYLES */
+        .formkit-form[data-uid="3aea498f73"] .formkit-submit:hover {
+            border-color: var(--primary-blue) !important;
+            color: var(--primary-blue) !important;
+        }
+
+        .formkit-form[data-uid="3aea498f73"] .formkit-submit:hover > span {
+            background-color: transparent !important;
+        }
+
+        /* ------------------------------------------------ */
+        /* END OF CUSTOM STYLES */
+        /* ------------------------------------------------ */
     </style>
 </form>

@@ -6,7 +6,7 @@
 a,
 button,
 input {
-    cursor: url('/icons/circle2.svg') 8 8, auto;
+    cursor: url('/icons/circle2.svg') 8 8, auto !important;
 }
 
 html {

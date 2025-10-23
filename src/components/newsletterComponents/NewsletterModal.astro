@@ -1,0 +1,125 @@
+---
+import KitFormComponent from "./KitFormComponent.astro";
+import Mail from "/public/icons/mail.svg";
+---
+
+<button id="open-newsletter-modal" class="modal-open-btn">
+    <Mail />
+</button>
+
+<div id="newsletter-modal" class="modal-backdrop">
+    <div class="modal-content">
+        <button id="close-newsletter-modal" class="modal-close-btn">
+            &times;
+        </button>
+        <KitFormComponent />
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById("newsletter-modal")!;
+    const openBtn = document.getElementById("open-newsletter-modal")!;
+    const closeBtn = document.getElementById("close-newsletter-modal")!;
+
+    // Function to open the modal
+    openBtn.addEventListener("click", () => {
+        modal.classList.add("is-open");
+        document.body.style.overflow = "hidden"; // Prevent scrolling the background
+    });
+
+    // Function to close the modal
+    const closeModal = () => {
+        modal.classList.remove("is-open");
+        document.body.style.overflow = ""; // Re-enable background scrolling
+    };
+
+    closeBtn.addEventListener("click", closeModal);
+
+    // Close on backdrop click
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key press
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("is-open")) {
+            closeModal();
+        }
+    });
+</script>
+
+<style>
+    /* --- Button Styling --- */
+    .modal-open-btn {
+        padding: 16px 16px;
+        background-color: black;
+        color: white;
+        border: 1px solid white;
+        border-radius: 8px;
+        position: fixed;
+        right: 32px;
+        bottom: 32px;
+    }
+
+    .modal-open-btn:hover {
+        border: 1px solid #0091e1;
+        color: #0091e1;
+    }
+
+    /* --- Modal Backdrop (The dark overlay) --- */
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure it's above all other content */
+        opacity: 0;
+        visibility: hidden;
+        transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+    }
+
+    .modal-backdrop.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* --- Modal Content Box --- */
+    .modal-content {
+        padding: 30px;
+        border-radius: 10px;
+        position: relative;
+        max-width: 85%;
+        width: 700px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        /* Simple animation */
+        transform: translateY(-50px);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-backdrop.is-open .modal-content {
+        transform: translateY(0);
+    }
+
+    /* --- Close Button --- */
+    .modal-close-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: none;
+        border: none;
+        font-size: 2em;
+        color: white;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+    }
+</style>
