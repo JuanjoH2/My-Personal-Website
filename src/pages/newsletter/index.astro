@@ -1,11 +1,152 @@
 ---
+import { date } from "astro:schema";
 import NewsletterModal from "../../components/newsletterComponents/NewsletterModal.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 const pageTitle = "Newsletter";
+
+// Kit API stuff
+const KIT_API_KEY = import.meta.env.V4_KIT_API_KEY;
+const API_ENDPOINT = "https://api.kit.com/v4/broadcasts";
+let broadcasts = [];
+
+const url = API_ENDPOINT;
+const options = {
+    method: "GET",
+    headers: { "X-Kit-Api-Key": KIT_API_KEY },
+    body: undefined,
+};
+
+try {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+            `Kit V4 API fetch failed with status: ${response.status}. Response: ${errorText}`,
+        );
+    }
+
+    const data = await response.json();
+
+    // 4. ***CRITICAL CORRECTION: Access the list using data.broadcasts***
+    if (data.broadcasts) {
+        broadcasts = data.broadcasts
+            // Filter: only include broadcasts that have a public URL and have been published
+            .filter(
+                (b: { public_url: any; published_at: any }) =>
+                    b.public_url && b.published_at,
+            )
+            .map(
+                (b: {
+                    subject: any;
+                    public_url: any;
+                    published_at: string | number | Date;
+                }) => ({
+                    // Title is in the 'subject' field
+                    title: b.subject,
+                    // Link is in the 'public_url' field
+                    link: b.public_url,
+                    // Format the date using 'published_at'
+                    date: new Date(b.published_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    }),
+                }),
+            )
+            // 5. Sort by publication date, newest first (descending)
+            .sort(
+                (
+                    a: { date: string | number | Date },
+                    b: { date: string | number | Date },
+                ) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+            );
+    }
+} catch (error) {
+    console.error("Error fetching Kit V4 data:", error);
+    broadcasts = [];
+}
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <section class="newsletter">
-        <NewsletterModal />
+    <NewsletterModal />
+    <section class="broadcast-list">
+        {
+            broadcasts.length > 0 ? (
+                <ul>
+                    {broadcasts.map(
+                        (broadcast: {
+                            date: unknown;
+                            link: string | URL | null | undefined;
+                            title: unknown;
+                        }) => (
+                            <li class="broadcast-item">
+                                <span class="broadcast-date">
+                                    {broadcast.date}
+                                </span>
+                                <a
+                                    href={broadcast.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {broadcast.title}
+                                </a>
+                            </li>
+                        ),
+                    )}
+                </ul>
+            ) : (
+                <p>
+                    The archive is currently unavailable. Please ensure your
+                    broadcasts are set to "Publish to web" and your V4 API key
+                    is configured correctly in the .env file.
+                </p>
+            )
+        }
     </section>
 </BaseLayout>
+
+<style>
+    .archive-header {
+        max-width: 800px;
+        margin: 40px auto;
+        text-align: center;
+    }
+    .broadcast-list {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    .broadcast-list ul {
+        list-style: none;
+        padding: 0;
+    }
+    .broadcast-item {
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    .broadcast-item:last-child {
+        border-bottom: none;
+    }
+    .broadcast-date {
+        font-weight: 300;
+        font-size: 0.9em;
+        color: #666;
+        flex-shrink: 0;
+        min-width: 100px;
+    }
+    .broadcast-item a {
+        font-size: 1.1em;
+        font-weight: 500;
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.2s;
+        flex-grow: 1;
+    }
+    .broadcast-item a:hover {
+        text-decoration: underline;
+    }
+</style>
