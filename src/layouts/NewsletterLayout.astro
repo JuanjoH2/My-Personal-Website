@@ -1,0 +1,45 @@
+---
+import BackButtonComponent from "../components/BackButtonComponent.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/thoughts.css";
+
+export interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <title>{title}</title>
+    </head>
+
+    <body>
+        <div id="backdrop" class="menu-backdrop"></div>
+        <Header />
+        <BackButtonComponent href="/newsletter" />
+        <main class="thought-container">
+            <slot />
+        </main>
+
+        <Footer />
+    </body>
+
+    <style>
+        .thought-container {
+            height: fit-content;
+            padding-top: 64px;
+            position: relative;
+        }
+    </style>
+</html>

@@ -1,0 +1,232 @@
+---
+import NewsletterLayout from "../../layouts/NewsletterLayout.astro";
+
+// --- TYPE DEFINITIONS ---
+interface Broadcast {
+    public_url: string;
+    published_at: string;
+    subject: string;
+    content: string;
+}
+
+interface Props {
+    broadcast: Broadcast;
+}
+
+// --- DYNAMIC PATH GENERATION ---
+export async function getStaticPaths() {
+    const KIT_API_KEY = import.meta.env.V4_KIT_API_KEY;
+
+    // Check if the key is actually present before attempting the fetch
+    if (!KIT_API_KEY) {
+        console.error("V4_KIT_API_KEY is not set. Returning empty paths.");
+        return [];
+    }
+
+    // Fetch data directly inside getStaticPaths
+    const listResponse = await fetch("https://api.kit.com/v4/broadcasts", {
+        method: "GET",
+        headers: { "X-Kit-Api-Key": KIT_API_KEY },
+    });
+
+    if (!listResponse.ok) {
+        console.error(`Failed to fetch broadcasts: ${listResponse.status}`);
+        return [];
+    }
+
+    const listData = await listResponse.json();
+
+    // Process and filter the data
+    const allBroadcasts = listData.broadcasts as Broadcast[];
+
+    const publishedBroadcasts = allBroadcasts.filter(
+        (b) => b.public_url && b.published_at,
+    );
+
+    // Map broadcasts to paths
+    return publishedBroadcasts.map((broadcast) => {
+        const url = new URL(broadcast.public_url);
+        const slug = url.pathname.split("/").pop();
+
+        return {
+            params: { slug: slug },
+            props: { broadcast: broadcast },
+        };
+    });
+}
+
+// --- PAGE CONTENT RENDERING ---
+const { broadcast } = Astro.props as Props;
+const rawHTMLContent = broadcast.content;
+
+// Cleanup the email HTML for web display
+const cleanedHTMLContent = rawHTMLContent
+    .replace(
+        // Remove the creator's section/footer from the email HTML
+        /<div class="ck-section ck-hide-in-public-posts".*?<\/table>.*?<\/center><\/div>/s,
+        "",
+    )
+    .replace(/\{\{.*?\}\}/g, ""); // Remove Liquid templating remnants
+
+const pageTitle = broadcast.subject;
+
+// Date formatting (using standard JS formatter since date-fns isn't imported)
+const formattedDate = new Date(broadcast.published_at).toLocaleDateString(
+    "en-US",
+    {
+        month: "short", // MMM
+        day: "numeric", // do
+        year: "numeric", // yyy
+    },
+);
+
+// READING TIME CALCULATION (Adapted for raw HTML string)
+const WPM = 200;
+// Strip HTML tags and non-alphanumeric characters for accurate word count
+const strippedContent = rawHTMLContent.replace(/<[^>]*>|[^a-zA-Z0-9\s]/g, "");
+const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.ceil(wordCount / WPM);
+---
+
+<NewsletterLayout title={pageTitle}>
+    <article class="thought-article">
+        <!-- 2. USE THE ARTICLE HEADER STRUCTURE -->
+        <header class="article-header">
+            <h1>{broadcast.subject}</h1>
+
+            <div class="article-meta">
+                <p class="author">By Juanjo Hurtado</p>
+                <p>|</p>
+                <!-- Date slot: Use the published date -->
+                <time datetime={broadcast.published_at}>
+                    {formattedDate}
+                </time>
+                <p>|</p>
+                <!-- Reading time slot -->
+                <p class="reading-time">{readingTime} min read</p>
+            </div>
+        </header>
+
+        <!-- Use a standard section wrapper for the content -->
+        <section class="article-content">
+            <!-- 
+                The raw HTML content is placed inside a wrapper div 
+                so we can easily target it with CSS if needed.
+            -->
+            <div class="newsletter-content" set:html={cleanedHTMLContent} />
+        </section>
+    </article>
+</NewsletterLayout>
+
+<!-- 3. TRANSFER CSS FROM THOUGHTS PAGE -->
+<style>
+    /*
+     * ------------------------------
+     * ARTICLE WRAPPER
+     * ------------------------------
+     */
+    .thought-article {
+        max-width: 800px;
+        margin: 4rem auto;
+        color: white;
+    }
+
+    /*
+     * ------------------------------
+     * HEADER
+     * ------------------------------
+     */
+    .article-header {
+        border-bottom: 1px solid white;
+        padding-bottom: 1.5rem;
+        margin-bottom: 64px;
+        text-align: center;
+    }
+
+    /* Use global H1 styles but ensure centering */
+    .article-header h1 {
+        font-size: 64px;
+        text-align: center;
+    }
+
+    .article-meta {
+        display: flex; /* Enables horizontal alignment */
+        justify-content: center;
+        gap: 32px;
+        font-size: 16px;
+    }
+
+    .article-header time,
+    .article-header .author {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+    }
+
+    .article-header p {
+        align-self: center;
+    }
+
+    /*
+     * ------------------------------
+     * CONTENT BODY (Newsletter HTML)
+     * ------------------------------
+     */
+    .article-content {
+        display: block;
+        height: fit-content;
+        line-height: 1.8;
+        padding-bottom: 1.5rem;
+        margin-bottom: 64px;
+        border-bottom: 1px solid white;
+    }
+
+    /* Since this content is raw HTML, we need to enforce styles 
+       on elements that might be inside the 'newsletter-content' wrapper 
+       to match the blog appearance.
+    */
+    .newsletter-content {
+        /* Ensure the newsletter content block is centered */
+        margin: 0 auto;
+    }
+
+    /* Ensure tables (common in email HTML) are centered */
+    .newsletter-content :global(table) {
+        margin: 0 auto;
+    }
+
+    /* Apply Thought styles to headings inside newsletter content */
+    .newsletter-content :global(h2) {
+        font-size: 2rem;
+        margin-top: 3.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        color: #0091e1;
+        border-bottom: 1px solid #333;
+    }
+
+    /* Apply Thought styles to blockquotes inside newsletter content */
+    .newsletter-content :global(blockquote) {
+        border-left: 4px solid #0091e1;
+        margin: 2rem 0;
+        padding: 0.5rem 1.5rem;
+        background-color: #282c34;
+        font-style: italic;
+        border-radius: 8px;
+    }
+
+    /* Mobile adjustments for the article */
+    @media (max-width: 600px) {
+        .thought-article {
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .article-header h1 {
+            font-size: 2rem;
+        }
+        .article-content {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+    }
+</style>

@@ -1,0 +1,60 @@
+---
+import { format } from "date-fns";
+
+export interface Props {
+    newsletter: {
+        title: string;
+        link: string;
+        date: string; // ISO date string from API
+    };
+}
+
+const { newsletter } = Astro.props;
+const formattedDate = format(new Date(newsletter.date), "MMM do, yyyy");
+---
+
+<a href={newsletter.link} class="newsletter-card-div">
+    <div class="card-content">
+        <h3>{newsletter.title}</h3>
+        <p class="card-date">{formattedDate}</p>
+    </div>
+</a>
+
+<style>
+    /* Apply the styling from your ThoughtCard here. 
+       Assuming it looks something like this (adjust colors/borders to match your ThoughtCard):
+    */
+    .newsletter-card-div {
+        /* Card container styles */
+        display: block;
+        border-radius: 16px;
+        border: 1px solid white;
+        background-color: black;
+        padding: 16px;
+        text-decoration: none;
+        color: white;
+        transition:
+            border-color 0.3s,
+            transform 0.3s;
+        width: 100%; /* Important for flex-basis to work */
+    }
+
+    .newsletter-card-div:hover {
+        border-color: #0091e1; /* Example hover color from your other styles */
+        transform: translateY(-5px);
+    }
+
+    .card-content h3 {
+        /* Override global h3 margin/styles if necessary */
+        font-size: 24px;
+        margin-block-start: 0;
+        margin-block-end: 8px;
+        text-align: center;
+    }
+
+    .card-date {
+        text-align: center;
+        font-size: 14px;
+        color: #aaa;
+    }
+</style>
