@@ -1,0 +1,29 @@
+[
+    {
+        "slug": "castle-challenge",
+        "name": "Castle Challenge",
+        "slogan": "Making habit-creation fun",
+        "description": "This Flutter webapp adds challenge & gamification to the habit-creation process by challenging your friend to keep a streak for the desired habit.",
+        "image": "/images/code/CastleChallenge.png",
+        "githubUrl": "https://github.com/JuanjoH2/CastleChallenge",
+        "demoUrl": "https://castle-challenge-jjh.web.app/"
+    },
+    {
+        "slug": "personal-website",
+        "name": "Personal Website",
+        "slogan": "Deep dive into this very website",
+        "description": "The source code for this very personal website, featuring Astro, Tailwind CSS, and TypeScript.",
+        "image": "/images/code/PersonalWebsite.png",
+        "githubUrl": "https://github.com/JuanjoH2/My-Personal-Website",
+        "demoUrl": "https://juanjohurtado.com"
+    },
+    {
+        "slug": "wut",
+        "name": "?",
+        "slogan": "Huh?",
+        "description": "Did you just...?",
+        "image": "/images/code/Wut.png",
+        "githubUrl": "https://www.youtube.com/embed/xvFZjo5PgG0?si=9PPZa6SDToDPET1S?rel=0&autoplay=1&mute=1",
+        "demoUrl": "https://www.youtube.com/embed/xvFZjo5PgG0?si=9PPZa6SDToDPET1S?rel=0&autoplay=1&mute=1"
+    }
+]

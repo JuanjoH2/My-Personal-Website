@@ -1,0 +1,64 @@
+---
+import CodeLayout from "../../layouts/CodeLayout.astro";
+import ProjectCard, {
+    type Project,
+} from "../../components/codeComponents/ProjectCard.astro";
+import projectsData from "../../data/code.json";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const pageTitle = "Code Projects";
+const allProjects: Project[] = projectsData as Project[];
+
+// You can sort projects here if needed, e.g., by date or name
+const sortedProjects = allProjects.sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<CodeLayout pageTitle={pageTitle}>
+    <section class="projects-index">
+        <div class="card-grid">
+            {
+                sortedProjects.length > 0 ? (
+                    sortedProjects.map((project) => (
+                        <ProjectCard project={project} />
+                    ))
+                ) : (
+                    <p>No projects found yet.</p>
+                )
+            }
+        </div>
+    </section>
+</CodeLayout>
+
+<style>
+    /* CRITICAL: Override global section styles for the index grid */
+    .projects-index {
+        /* This ensures the section flows naturally and doesn't conflict with global.css */
+        height: auto;
+        display: flex;
+        min-height: 100vh;
+        padding: 64px 0;
+    }
+
+    .card-grid {
+        /* Center the grid container on the page */
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px;
+
+        /* Grid specific styles */
+        display: grid;
+        /* Adjust these columns based on your desired layout (3 or 4 columns) */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 32px;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+        .card-grid {
+            /* Switch to 1 column on small screens */
+            grid-template-columns: 1fr;
+            padding: 0 16px;
+            gap: 24px;
+        }
+    }
+</style>
