@@ -34,15 +34,11 @@ const pageTitle = project.name;
             </div>
 
             <div class="grid-box box-2">
-                <p>Changing the way we make business by making it fun.</p>
+                <p>{project.slogan}</p>
             </div>
 
             <div class="grid-box box-3">
-                <p>
-                    This Flutter webapp adds challenge & gamification to the
-                    habit-creation process by challenging your friend to keep a
-                    streak for the desired habit.
-                </p>
+                <p>{project.description}</p>
             </div>
         </div>
     </section>
@@ -55,38 +51,6 @@ const pageTitle = project.name;
         </div>
     </section>
 </BaseLayout>
-
-<!-- <section class="project-page-content">
-        <header class="project-header">
-            <h1>{project.name}</h1>
-            <p class="description">{project.description}</p>
-
-            <div class="links">
-                <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    View on GitHub
-                </a>
-                <a
-                    href={project.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Open Full Demo
-                </a>
-            </div>
-        </header>
-
-        <div class="project-demo-container">
-            <h2>Live Demo</h2>
-            <iframe
-                src={project.demoUrl}
-                title={`Live demo of ${project.name}`}
-                loading="lazy"></iframe>
-        </div>
-    </section> -->
 
 <style>
     .project-page-content {
