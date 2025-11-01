@@ -102,15 +102,23 @@ import Navigation from "./Navigation.astro";
 
     /* Style for the SVG/Logo element */
     .logo {
+        /* Only set the height, let the width scale automatically based on the SVG's aspect ratio */
         height: 64px;
-        width: 64px;
+        /* REMOVED: width: 64px; */
+
+        /* Ensures the SVG scales correctly within the space */
+        width: auto;
+
         display: block;
-        margin-top: 16px;
+
+        /* Adjust positioning to vertically align with the header height */
+        margin-top: 0; /* Remove 16px to center it in the 64px header */
         margin-left: 16px;
     }
 
     .menu {
-        margin-top: 16px;
+        /* Adjust positioning to vertically align with the header height */
+        margin-top: 0; /* Remove 16px to center it in the 64px header */
         margin-right: 16px;
     }
 </style>
