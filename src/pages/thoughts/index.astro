@@ -3,7 +3,7 @@ import ThoughtCard from "../../components/thoughtsComponents/ThoughtCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const pageTitle = "Thoughts";
+const pageTitle = "Thoughts Archive";
 const allThoughts = await getCollection("thoughts");
 
 // Sort posts by publication date (newest first)

@@ -62,6 +62,18 @@ p {
     font-weight: normal;
 }
 
+p strong {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0091e1;
+}
+
+ol strong {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0091e1;
+}
+
 /* ========================================================= */
 /* BACKDROP STYLES                                           */
 /* ========================================================= */
