@@ -9,14 +9,20 @@
 </section>
 
 <script is:inline>
-    // Wait for the entire DOM to load before trying to access elements
+    // Define the mobile breakpoint globally for consistency
+    const MOBILE_BREAKPOINT = 600;
+
+    // Helper function to check the current viewport status
+    function isMobileViewport() {
+        return window.innerWidth < MOBILE_BREAKPOINT;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-        const codeSection = document.getElementById("code");
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        // We no longer need the mobileBreakpoint constant here.
+        const navButton = codeDiv.querySelector("button");
 
-        if (!codeSection || !container || !codeDiv) {
+        if (!container || !codeDiv || !navButton) {
             console.error("Required DOM elements not found for animation.");
             return;
         }
@@ -25,7 +31,11 @@
         const WORDS = ["1", "0"];
         const spawnRate = 50;
 
-        // Function to create and drop a single binary character
+        // State flag for mobile: true means rain is OFF, click will START it.
+        let toggleRainMobile = false;
+
+        // --- Core Animation Functions ---
+
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
@@ -34,7 +44,6 @@
             span.textContent = word;
 
             const randomXStart = Math.random() * 100;
-            // Use container height for fall distance to ensure it always falls completely out
             const fallDistanceVh = 150;
             const randomDuration = Math.random() * 3 + 2;
             const randomSize = Math.floor(Math.random() * 14) + 12;
@@ -50,12 +59,10 @@
 
             container.appendChild(span);
 
-            // Use rAF to ensure CSS transition is applied on the next frame
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
-            // Clean up the element after it finishes falling
             setTimeout(
                 () => {
                     span.remove();
@@ -64,17 +71,12 @@
             );
         }
 
-        // Start the continuous rain animation
         function startRain() {
             if (intervalId !== null) return;
-            // Prevent starting if the click/enter was on the button itself
-            // This is primarily for the mobile tap scenario
-
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
             codeDiv.classList.add("rain-active");
         }
 
-        // Stop the rain animation
         function stopRain() {
             if (intervalId !== null) {
                 clearInterval(intervalId);
@@ -83,25 +85,70 @@
             }
         }
 
-        // --- Simplified Event Handlers (Matching Thoughts Logic) ---
+        // --- Event Handlers (Attached UNCONDITIONALLY) ---
 
-        // 1. MouseEnter/TouchStart triggers startRain
+        // Desktop Hover (mouseenter/mouseleave)
         codeDiv.addEventListener("mouseenter", () => {
-            console.log("mouseenter");
-            startRain();
+            if (!isMobileViewport()) {
+                startRain();
+            }
         });
 
-        // 2. MouseLeave/TouchEnd triggers stopRain
         codeDiv.addEventListener("mouseleave", () => {
-            console.log("mouseleave");
+            if (!isMobileViewport()) {
+                stopRain();
+            }
+        });
+
+        // Mobile Click Toggle
+        codeDiv.addEventListener("click", (event) => {
+            // Do not react if click originated from the button, or if not mobile
+            if (event.target === navButton || !isMobileViewport()) {
+                return;
+            }
+
+            if (toggleRainMobile) {
+                // Rain is currently ON, so STOP it
+                stopRain();
+                toggleRainMobile = false;
+            } else {
+                // Rain is currently OFF, so START it
+                startRain();
+                toggleRainMobile = true;
+            }
+        });
+
+        // Stop rain immediately on navigation click
+        navButton.addEventListener("click", (e) => {
+            e.stopPropagation();
             stopRain();
         });
+
+        // Global click handler to stop rain if active and user clicks outside
+        document.addEventListener("click", (event) => {
+            const isClickOnCodeDiv = codeDiv.contains(event.target);
+
+            // If mobile, rain is running (toggleRainMobile is true), AND click is outside
+            if (isMobileViewport() && toggleRainMobile && !isClickOnCodeDiv) {
+                stopRain();
+                toggleRainMobile = false;
+            }
+        });
+
+        // Handle screen resize (forces a reset)
+        window.addEventListener("resize", () => {
+            stopRain();
+            toggleRainMobile = false; // Reset mobile flag
+        });
+
+        // --- Initialization ---
+        stopRain();
     });
 </script>
 
 <style is:global>
     /*
-     * LOCAL STYLES (is:global added to prevent Astro scoping, allowing JS-created elements to be styled)
+     * LOCAL STYLES
      */
     #code {
         /* overflow: hidden is critical to hide the rain when it falls past the section boundary */
@@ -112,7 +159,7 @@
     #codeDiv {
         position: relative;
         z-index: 6;
-        /* Ensure the area is responsive to touch */
+        /* Ensures touch interactions don't accidentally pan the page */
         touch-action: manipulation;
     }
 
@@ -122,17 +169,18 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* Ensure the container is behind the 'Code' box */
+        /* Ensure the container is behind the 'Code' box's content */
         z-index: 0;
-        pointer-events: none; /* Allows clicks/touches to pass through to the element behind it */
+        /* Allows clicks/touches to pass through to the element behind it (the codeDiv) */
+        pointer-events: none;
     }
 
-    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 */
+    /* Styles for the individual falling characters */
     #binaryRainContainer .binary-drop {
         position: absolute;
         z-index: 5;
 
-        /* CRITICAL: Start 100% of its own height UP and OFF-SCREEN. */
+        /* CRITICAL: Start off-screen at the top */
         transform: translateY(-100%);
 
         /* Base styles */
@@ -141,7 +189,7 @@
         color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
 
-        /* Ensure the transition property is explicitly defined */
+        /* Define transition property for smooth falling */
         transition:
             transform linear,
             color 0.5s ease-out;
