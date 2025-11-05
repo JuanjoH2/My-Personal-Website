@@ -26,13 +26,13 @@
         const spawnRate = 50;
 
         function isMobileViewport() {
+            // Check if the current window width is less than or equal to the defined breakpoint
             return window.innerWidth <= mobileBreakpoint;
         }
 
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
-
             const span = document.createElement("span");
             span.className = "binary-drop";
             span.textContent = word;
@@ -52,7 +52,6 @@
             }
 
             container.appendChild(span);
-
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
@@ -79,10 +78,9 @@
             }
         }
 
-        // --- Event Dispatcher ---
+        // --- Core Listener Logic (Guarded by viewport check) ---
 
-        // 1. Desktop Setup (Hover-to-Start/Stop)
-        // These listeners run regardless of screen size, but the start/stop functions are guarded.
+        // 1. Desktop Hover Listeners
         codeDiv.addEventListener("mouseenter", () => {
             if (!isMobileViewport()) {
                 startRain();
@@ -94,31 +92,24 @@
             }
         });
 
-        // 2. Mobile Setup (Click-to-Start)
-        // This is only attached to the codeDiv for a single click action.
+        // 2. Mobile Click-to-Start Listener (Only active if mobile)
         codeDiv.addEventListener("click", (event) => {
-            // Ignore if it's the navigation button
-            if (event.target.tagName.toLowerCase() === "button") {
-                return;
-            }
-
-            // Only act if we are in mobile view AND rain is currently stopped
+            // Check for mobile view and ensure rain is not already running
             if (isMobileViewport() && intervalId === null) {
-                // Stop the synthetic mouse events from triggering the stop logic
-                // (Though we are using a document listener now, this is still good practice)
+                // Ignore if clicking the nested button
+                if (event.target.tagName.toLowerCase() === "button") {
+                    return;
+                }
                 event.stopPropagation();
                 startRain();
             }
         });
 
-        // 3. Global Stop Listener (Mobile Only: Click anywhere outside codeDiv to stop the rain)
+        // 3. Mobile Global Stop Listener (Stops rain if click is outside codeDiv)
         document.addEventListener("click", (event) => {
             const isClickOnCodeDiv = codeDiv.contains(event.target);
 
-            // Only run the stop logic if:
-            // a) We are in mobile view
-            // b) The rain is currently running
-            // c) The click happened OUTSIDE of the codeDiv
+            // Only act if mobile, rain is running, AND click is outside codeDiv
             if (
                 isMobileViewport() &&
                 intervalId !== null &&
@@ -128,10 +119,11 @@
             }
         });
 
-        // --- Cleanup ---
+        // --- Initialization and Cleanup ---
         stopRain();
 
         window.addEventListener("resize", () => {
+            // Stop rain and reset when screen size changes, forcing a new interaction
             stopRain();
         });
     });
@@ -165,15 +157,10 @@
         pointer-events: none; /* Allows clicks to pass through to the element behind it */
     }
 
-    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 
-       This CSS will now apply globally, correctly styling the dynamic spans. */
+    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 */
     #binaryRainContainer .binary-drop {
         position: absolute;
         z-index: 5;
-
-        /* START POSITION: This is the crucial configuration */
-        top: 0;
-        left: 0;
 
         /* CRITICAL: Start 100% of its own height UP and OFF-SCREEN. */
         transform: translateY(-100%);
@@ -181,13 +168,12 @@
         /* Base styles */
         font-weight: bold;
         white-space: nowrap;
-        /* Updated color to white/light gray for contrast on dark background */
         color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
 
         /* Ensure the transition property is explicitly defined */
         transition:
             transform linear,
-            /* Ensures constant falling speed */ color 0.5s ease-out;
+            color 0.5s ease-out;
     }
 </style>
