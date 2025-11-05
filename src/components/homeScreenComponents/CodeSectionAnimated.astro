@@ -86,23 +86,16 @@
         // --- Simplified Event Handlers (Matching Thoughts Logic) ---
 
         // 1. MouseEnter/TouchStart triggers startRain
-        codeDiv.addEventListener("mouseenter", startRain);
-
-        // 2. MouseLeave/TouchEnd triggers stopRain
-        codeDiv.addEventListener("mouseleave", stopRain);
-
-        // 3. Prevent the rain from starting if the user clicks the nested button
-        codeDiv.querySelector("button").addEventListener("click", (e) => {
-            // Stop the event from propagating to codeDiv
-            e.stopPropagation();
-            // Also stop the rain immediately on navigation click
-            stopRain();
+        codeDiv.addEventListener("mouseenter", () => {
+            console.log("mouseenter");
+            startRain();
         });
 
-        // --- Initialization and Cleanup ---
-        stopRain(); // Ensure it starts in a clean state
-
-        window.addEventListener("resize", stopRain);
+        // 2. MouseLeave/TouchEnd triggers stopRain
+        codeDiv.addEventListener("mouseleave", () => {
+            console.log("mouseleave");
+            stopRain();
+        });
     });
 </script>
 
