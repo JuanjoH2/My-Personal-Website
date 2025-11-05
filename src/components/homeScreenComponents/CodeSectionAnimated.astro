@@ -29,7 +29,8 @@
         const spawnRate = 50;
 
         // Helper function to check if we are in the mobile viewport range
-        function isMobileView() {
+        function isMobileViewport() {
+            // Check if the current window width is less than or equal to the defined breakpoint
             return window.innerWidth <= mobileBreakpoint;
         }
 
@@ -88,7 +89,15 @@
             }
         }
 
-        function toggleRain() {
+        function toggleRain(event) {
+            // Stop execution if the actual button inside is tapped (to allow navigation)
+            if (event.target.tagName.toLowerCase() === "button") {
+                return;
+            }
+
+            // Prevent default behavior (like accidental scrolling)
+            event.preventDefault();
+
             if (intervalId === null) {
                 startRain();
             } else {
@@ -96,32 +105,22 @@
             }
         }
 
-        // --- Event Handlers (Conditional Logic based on initial screen size) ---
+        // --- Event Handlers (Conditional Logic based on screen size) ---
 
-        if (!isMobileView()) {
+        if (!isMobileViewport()) {
             // Desktop (> 600px): Use hover events
             codeDiv.addEventListener("mouseenter", startRain);
             codeDiv.addEventListener("mouseleave", stopRain);
         } else {
-            // Mobile (<= 600px): Use click/tap events
+            // Mobile (<= 600px): Use touchstart/tap events
 
-            // 1. Tap on codeDiv to start/stop the rain
-            codeDiv.addEventListener("click", (event) => {
-                // If the user clicks the actual button, let the navigation happen and don't toggle the rain state
-                if (event.target.tagName.toLowerCase() === "button") {
-                    return;
-                }
-                toggleRain();
+            // 1. Tap on codeDiv to start/stop the rain (uses touchstart instead of click)
+            codeDiv.addEventListener("touchstart", toggleRain, {
+                passive: false,
             });
 
-            // 2. Tap anywhere else on the document to stop the rain
-            document.addEventListener("click", (event) => {
-                // Check if the click target is outside the codeDiv container
-                // AND the rain is currently running
-                if (!codeDiv.contains(event.target) && intervalId !== null) {
-                    stopRain();
-                }
-            });
+            // NOTE: The external document click listener is REMOVED to prevent event interference.
+            // Rain must now be explicitly stopped by tapping the codeDiv again.
 
             // Ensure the initial state is off when loading on mobile
             stopRain();
