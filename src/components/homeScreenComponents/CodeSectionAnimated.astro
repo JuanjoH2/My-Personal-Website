@@ -11,24 +11,20 @@
 <script is:inline>
     // Wait for the entire DOM to load before trying to access elements
     document.addEventListener("DOMContentLoaded", () => {
+        const codeSection = document.getElementById("code");
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        const mobileBreakpoint = 600; // Breakpoint for mobile activation
+        const mobileBreakpoint = 600;
 
-        if (!container || !codeDiv) {
+        if (!codeSection || !container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
             return;
         }
 
         let intervalId = null;
-
-        // Binary digits
         const WORDS = ["1", "0"];
-
-        // High spawn rate for a dense rain effect
         const spawnRate = 50;
 
-        // Helper function to check if we are in the mobile viewport range
         function isMobileViewport() {
             // Check if the current window width is less than or equal to the defined breakpoint
             return window.innerWidth <= mobileBreakpoint;
@@ -37,38 +33,29 @@
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
-
             const span = document.createElement("span");
             span.className = "binary-drop";
             span.textContent = word;
 
-            // --- MATRIX RAIN EFFECT PROPERTIES ---
-
             const randomXStart = Math.random() * 100;
-            const fallDistanceVh = Math.random() * 50 + 100; // 100vh to 150vh
-            const randomDuration = Math.random() * 3 + 2; // 2.0s to 5.0s
-            const randomSize = Math.floor(Math.random() * 14) + 12; // 12px to 26px
+            const fallDistanceVh = Math.random() * 50 + 100;
+            const randomDuration = Math.random() * 3 + 2;
+            const randomSize = Math.floor(Math.random() * 14) + 12;
 
-            // Apply dynamic CSS for starting position and size
             span.style.left = `${randomXStart}%`;
             span.style.fontSize = `${randomSize}px`;
             span.style.transitionDuration = `${randomDuration}s`;
 
-            // Optional: brighter color for distinction
             if (Math.random() < 0.1) {
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
             }
 
-            // Add to DOM
             container.appendChild(span);
-
-            // Trigger the transition after the element is in the DOM
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
-            // Clean up: Remove the element after its animation is complete
             setTimeout(
                 () => {
                     span.remove();
@@ -80,26 +67,63 @@
         function startRain() {
             if (intervalId !== null) return;
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
+            codeDiv.classList.add("rain-active");
         }
 
         function stopRain() {
             if (intervalId !== null) {
                 clearInterval(intervalId);
                 intervalId = null;
+                codeDiv.classList.remove("rain-active");
             }
         }
 
-        // --- Event Handlers (Conditional Logic based on screen size) ---
+        // --- Core Listener Logic (Guarded by viewport check) ---
 
-        // 1. Tap on codeDiv to start the rain
-        codeDiv.addEventListener("click", () => {
-            console.log("mobile in");
-            startRain();
+        // 1. Desktop Hover Listeners (Guarded: ONLY run if not mobile)
+        codeDiv.addEventListener("mouseenter", () => {
+            if (!isMobileViewport()) {
+                startRain();
+            }
+        });
+        codeDiv.addEventListener("mouseleave", () => {
+            if (!isMobileViewport()) {
+                stopRain();
+            }
         });
 
-        // 2. Tap on codeSection to stop the rain
-        container.addEventListener("click", () => {
-            console.log("mobile out");
+        // 2. Mobile Click-to-Start Listener (Guarded: ONLY run if mobile)
+        codeDiv.addEventListener("click", (event) => {
+            // Check for mobile view and ensure rain is not already running
+            if (isMobileViewport() && intervalId === null) {
+                // Ignore if clicking the nested button
+                if (event.target.tagName.toLowerCase() === "button") {
+                    return;
+                }
+                event.stopPropagation();
+                startRain();
+            }
+        });
+
+        // 3. Mobile Global Stop Listener (Stops rain if click is outside codeDiv)
+        document.addEventListener("click", (event) => {
+            const isClickOnCodeDiv = codeDiv.contains(event.target);
+
+            // Only act if mobile, rain is running, AND click is outside codeDiv
+            if (
+                isMobileViewport() &&
+                intervalId !== null &&
+                !isClickOnCodeDiv
+            ) {
+                stopRain();
+            }
+        });
+
+        // --- Initialization and Cleanup ---
+        stopRain();
+
+        window.addEventListener("resize", () => {
+            // Stop rain and reset when screen size changes, forcing a new interaction
             stopRain();
         });
     });
@@ -130,17 +154,13 @@
         height: 100%;
         /* Ensure the container is behind the 'Code' box */
         z-index: 0;
+        pointer-events: none; /* Allows clicks to pass through to the element behind it */
     }
 
-    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 
-       This CSS will now apply globally, correctly styling the dynamic spans. */
+    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 */
     #binaryRainContainer .binary-drop {
         position: absolute;
         z-index: 5;
-
-        /* START POSITION: This is the crucial configuration */
-        top: 0;
-        left: 0;
 
         /* CRITICAL: Start 100% of its own height UP and OFF-SCREEN. */
         transform: translateY(-100%);
@@ -148,13 +168,12 @@
         /* Base styles */
         font-weight: bold;
         white-space: nowrap;
-        /* Updated color to white/light gray for contrast on dark background */
         color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
 
         /* Ensure the transition property is explicitly defined */
         transition:
             transform linear,
-            /* Ensures constant falling speed */ color 0.5s ease-out;
+            color 0.5s ease-out;
     }
 </style>
