@@ -80,25 +80,48 @@
             );
         }
 
-        // Event handlers for continuous spawning
-        codeDiv.addEventListener("mouseenter", () => {
+        function startRain() {
+            // Only start if it's not already running
             if (intervalId !== null) return;
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
-        });
+        }
 
-        codeDiv.addEventListener("mouseleave", () => {
+        function stopRain() {
             if (intervalId !== null) {
                 clearInterval(intervalId);
                 intervalId = null;
             }
-        });
+        }
+
+        // --- Event Handlers ---
+
+        // 1. Desktop: Mouse Events
+        codeDiv.addEventListener("mouseenter", startRain);
+        codeDiv.addEventListener("mouseleave", stopRain);
+
+        // 2. Mobile: Touch Events (The Fix)
+        // Note: For touch, a tap initiates both the rain AND the button's navigation.
+        // We start the rain on 'touchstart' and let the page navigation stop it.
+        // If the user taps the background of codeDiv, the rain will start and persist
+        // until they tap somewhere else on the page (though we don't have a specific
+        // 'stop' for that case, it often clears itself).
+        codeDiv.addEventListener("touchstart", startRain, { passive: true });
+
+        // Use 'touchend' to stop the rain if they lift their finger outside the button
+        // and aren't navigating. (Passive is important for touch event performance).
+        codeDiv.addEventListener("touchend", stopRain);
+        codeDiv.addEventListener("touchcancel", stopRain);
+
+        // 3. Prevent Rain when the button is actively clicked/tapped (optional cleanup)
+        // You could add logic here to *only* show the rain if the button wasn't the target.
+        // For now, the existing navigation prevents long rain, which is usually fine.
     });
 </script>
 
 <style is:global>
     /*
-    * LOCAL STYLES (is:global added to prevent Astro scoping, allowing JS-created elements to be styled)
-    */
+     * LOCAL STYLES (is:global added to prevent Astro scoping, allowing JS-created elements to be styled)
+     */
     #code {
         /* overflow: hidden is critical to hide the rain when it falls past the section boundary */
         overflow: hidden;
@@ -108,6 +131,8 @@
     #codeDiv {
         position: relative;
         z-index: 6;
+        /* Make sure this area is tappable for the effect */
+        touch-action: manipulation;
     }
 
     #binaryRainContainer {
