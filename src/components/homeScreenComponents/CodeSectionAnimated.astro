@@ -14,7 +14,7 @@
         const codeSection = document.getElementById("code");
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        const mobileBreakpoint = 600;
+        // We no longer need the mobileBreakpoint constant here.
 
         if (!codeSection || !container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
@@ -25,11 +25,7 @@
         const WORDS = ["1", "0"];
         const spawnRate = 50;
 
-        function isMobileViewport() {
-            // Check if the current window width is less than or equal to the defined breakpoint
-            return window.innerWidth <= mobileBreakpoint;
-        }
-
+        // Function to create and drop a single binary character
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
@@ -38,7 +34,8 @@
             span.textContent = word;
 
             const randomXStart = Math.random() * 100;
-            const fallDistanceVh = Math.random() * 50 + 100;
+            // Use container height for fall distance to ensure it always falls completely out
+            const fallDistanceVh = 150;
             const randomDuration = Math.random() * 3 + 2;
             const randomSize = Math.floor(Math.random() * 14) + 12;
 
@@ -52,10 +49,13 @@
             }
 
             container.appendChild(span);
+
+            // Use rAF to ensure CSS transition is applied on the next frame
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
+            // Clean up the element after it finishes falling
             setTimeout(
                 () => {
                     span.remove();
@@ -64,12 +64,17 @@
             );
         }
 
+        // Start the continuous rain animation
         function startRain() {
             if (intervalId !== null) return;
+            // Prevent starting if the click/enter was on the button itself
+            // This is primarily for the mobile tap scenario
+
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
             codeDiv.classList.add("rain-active");
         }
 
+        // Stop the rain animation
         function stopRain() {
             if (intervalId !== null) {
                 clearInterval(intervalId);
@@ -78,54 +83,26 @@
             }
         }
 
-        // --- Core Listener Logic (Guarded by viewport check) ---
+        // --- Simplified Event Handlers (Matching Thoughts Logic) ---
 
-        // 1. Desktop Hover Listeners (Guarded: ONLY run if not mobile)
-        codeDiv.addEventListener("mouseenter", () => {
-            if (!isMobileViewport()) {
-                startRain();
-            }
-        });
-        codeDiv.addEventListener("mouseleave", () => {
-            if (!isMobileViewport()) {
-                stopRain();
-            }
-        });
+        // 1. MouseEnter/TouchStart triggers startRain
+        codeDiv.addEventListener("mouseenter", startRain);
 
-        // 2. Mobile Click-to-Start Listener (Guarded: ONLY run if mobile)
-        codeDiv.addEventListener("click", (event) => {
-            // Check for mobile view and ensure rain is not already running
-            if (isMobileViewport() && intervalId === null) {
-                // Ignore if clicking the nested button
-                if (event.target.tagName.toLowerCase() === "button") {
-                    return;
-                }
-                event.stopPropagation();
-                startRain();
-            }
-        });
+        // 2. MouseLeave/TouchEnd triggers stopRain
+        codeDiv.addEventListener("mouseleave", stopRain);
 
-        // 3. Mobile Global Stop Listener (Stops rain if click is outside codeDiv)
-        document.addEventListener("click", (event) => {
-            const isClickOnCodeDiv = codeDiv.contains(event.target);
-
-            // Only act if mobile, rain is running, AND click is outside codeDiv
-            if (
-                isMobileViewport() &&
-                intervalId !== null &&
-                !isClickOnCodeDiv
-            ) {
-                stopRain();
-            }
+        // 3. Prevent the rain from starting if the user clicks the nested button
+        codeDiv.querySelector("button").addEventListener("click", (e) => {
+            // Stop the event from propagating to codeDiv
+            e.stopPropagation();
+            // Also stop the rain immediately on navigation click
+            stopRain();
         });
 
         // --- Initialization and Cleanup ---
-        stopRain();
+        stopRain(); // Ensure it starts in a clean state
 
-        window.addEventListener("resize", () => {
-            // Stop rain and reset when screen size changes, forcing a new interaction
-            stopRain();
-        });
+        window.addEventListener("resize", stopRain);
     });
 </script>
 
@@ -154,7 +131,7 @@
         height: 100%;
         /* Ensure the container is behind the 'Code' box */
         z-index: 0;
-        pointer-events: none; /* Allows clicks to pass through to the element behind it */
+        pointer-events: none; /* Allows clicks/touches to pass through to the element behind it */
     }
 
     /* 💥 HIGHLY SPECIFIC SELECTOR 💥 */
