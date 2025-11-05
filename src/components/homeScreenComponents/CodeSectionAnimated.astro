@@ -89,22 +89,6 @@
             }
         }
 
-        function toggleRain(event) {
-            // Stop execution if the actual button inside is tapped (to allow navigation)
-            if (event.target.tagName.toLowerCase() === "button") {
-                return;
-            }
-
-            // Prevent default behavior (like accidental scrolling)
-            event.preventDefault();
-
-            if (intervalId === null) {
-                startRain();
-            } else {
-                stopRain();
-            }
-        }
-
         // --- Event Handlers (Conditional Logic based on screen size) ---
 
         if (!isMobileViewport()) {
@@ -114,13 +98,15 @@
         } else {
             // Mobile (<= 600px): Use touchstart/tap events
 
-            // 1. Tap on codeDiv to start/stop the rain (uses touchstart instead of click)
-            codeDiv.addEventListener("touchstart", toggleRain, {
+            // 1. Tap on codeDiv to start the rain
+            codeDiv.addEventListener("touchstart", startRain, {
                 passive: false,
             });
 
-            // NOTE: The external document click listener is REMOVED to prevent event interference.
-            // Rain must now be explicitly stopped by tapping the codeDiv again.
+            // 2. Tap on codeSection to stop the rain
+            container.addEventListener("touchstart", stopRain, {
+                passive: false,
+            });
 
             // Ensure the initial state is off when loading on mobile
             stopRain();
