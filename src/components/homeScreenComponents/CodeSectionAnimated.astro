@@ -11,7 +11,7 @@
 <script is:inline>
     // Wait for the entire DOM to load before trying to access elements
     document.addEventListener("DOMContentLoaded", () => {
-        const codeSection = document.getElementById("code"); // Parent element for the stop action
+        const codeSection = document.getElementById("code");
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
         const mobileBreakpoint = 600;
@@ -22,13 +22,10 @@
         }
 
         let intervalId = null;
-
         const WORDS = ["1", "0"];
         const spawnRate = 50;
 
-        // Helper function to check if we are in the mobile viewport range
         function isMobileViewport() {
-            // Check if the current window width is less than or equal to the defined breakpoint
             return window.innerWidth <= mobileBreakpoint;
         }
 
@@ -71,54 +68,70 @@
         function startRain() {
             if (intervalId !== null) return;
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
+            codeDiv.classList.add("rain-active");
         }
 
         function stopRain() {
             if (intervalId !== null) {
                 clearInterval(intervalId);
                 intervalId = null;
+                codeDiv.classList.remove("rain-active");
             }
         }
 
-        // --- Event Handlers (Strict Conditional Attachment) ---
+        // --- Event Dispatcher ---
 
-        if (isMobileViewport()) {
-            // MOBILE SETUP (<= 600px): Click to Start/Click Section to Stop
-
-            // 1. Click on codeDiv to START the rain indefinitely.
-            // Using 'click' here is reliable because we are ONLY registering this handler for mobile.
-            codeDiv.addEventListener("click", (event) => {
-                // Ignore click if it's on the nested button
-                if (event.target.tagName.toLowerCase() === "button") {
-                    return;
-                }
+        // 1. Desktop Setup (Hover-to-Start/Stop)
+        // These listeners run regardless of screen size, but the start/stop functions are guarded.
+        codeDiv.addEventListener("mouseenter", () => {
+            if (!isMobileViewport()) {
                 startRain();
-            });
+            }
+        });
+        codeDiv.addEventListener("mouseleave", () => {
+            if (!isMobileViewport()) {
+                stopRain();
+            }
+        });
 
-            // 2. Click on the parent section (#code) to STOP the rain.
-            // This catches clicks outside of the codeDiv content.
-            codeSection.addEventListener("click", (event) => {
-                // Check if the click occurred on the parent section itself OR the binary container (behind codeDiv)
-                // AND the rain is currently running.
-                const isClickOutsideCodeDiv =
-                    !codeDiv.contains(event.target) ||
-                    event.target === codeSection;
+        // 2. Mobile Setup (Click-to-Start)
+        // This is only attached to the codeDiv for a single click action.
+        codeDiv.addEventListener("click", (event) => {
+            // Ignore if it's the navigation button
+            if (event.target.tagName.toLowerCase() === "button") {
+                return;
+            }
 
-                if (isClickOutsideCodeDiv && intervalId !== null) {
-                    stopRain();
-                }
-            });
-        } else {
-            // DESKTOP SETUP (> 600px): Hover to Start/Stop
-            codeDiv.addEventListener("mouseenter", startRain);
-            codeDiv.addEventListener("mouseleave", stopRain);
-        }
+            // Only act if we are in mobile view AND rain is currently stopped
+            if (isMobileViewport() && intervalId === null) {
+                // Stop the synthetic mouse events from triggering the stop logic
+                // (Though we are using a document listener now, this is still good practice)
+                event.stopPropagation();
+                startRain();
+            }
+        });
+
+        // 3. Global Stop Listener (Mobile Only: Click anywhere outside codeDiv to stop the rain)
+        document.addEventListener("click", (event) => {
+            const isClickOnCodeDiv = codeDiv.contains(event.target);
+
+            // Only run the stop logic if:
+            // a) We are in mobile view
+            // b) The rain is currently running
+            // c) The click happened OUTSIDE of the codeDiv
+            if (
+                isMobileViewport() &&
+                intervalId !== null &&
+                !isClickOnCodeDiv
+            ) {
+                stopRain();
+            }
+        });
 
         // --- Cleanup ---
-        stopRain(); // Ensure it's off by default on load
+        stopRain();
 
         window.addEventListener("resize", () => {
-            // Stop the rain when the window size changes (e.g., rotating tablet)
             stopRain();
         });
     });
@@ -149,6 +162,7 @@
         height: 100%;
         /* Ensure the container is behind the 'Code' box */
         z-index: 0;
+        pointer-events: none; /* Allows clicks to pass through to the element behind it */
     }
 
     /* 💥 HIGHLY SPECIFIC SELECTOR 💥 
