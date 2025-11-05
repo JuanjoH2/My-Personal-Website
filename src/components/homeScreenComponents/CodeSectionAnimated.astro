@@ -11,21 +11,19 @@
 <script is:inline>
     // Wait for the entire DOM to load before trying to access elements
     document.addEventListener("DOMContentLoaded", () => {
+        const codeSection = document.getElementById("code"); // Parent element for the stop action
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        const mobileBreakpoint = 600; // Breakpoint for mobile activation
+        const mobileBreakpoint = 600;
 
-        if (!container || !codeDiv) {
+        if (!codeSection || !container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
             return;
         }
 
         let intervalId = null;
 
-        // Binary digits
         const WORDS = ["1", "0"];
-
-        // High spawn rate for a dense rain effect
         const spawnRate = 50;
 
         // Helper function to check if we are in the mobile viewport range
@@ -42,33 +40,26 @@
             span.className = "binary-drop";
             span.textContent = word;
 
-            // --- MATRIX RAIN EFFECT PROPERTIES ---
-
             const randomXStart = Math.random() * 100;
-            const fallDistanceVh = Math.random() * 50 + 100; // 100vh to 150vh
-            const randomDuration = Math.random() * 3 + 2; // 2.0s to 5.0s
-            const randomSize = Math.floor(Math.random() * 14) + 12; // 12px to 26px
+            const fallDistanceVh = Math.random() * 50 + 100;
+            const randomDuration = Math.random() * 3 + 2;
+            const randomSize = Math.floor(Math.random() * 14) + 12;
 
-            // Apply dynamic CSS for starting position and size
             span.style.left = `${randomXStart}%`;
             span.style.fontSize = `${randomSize}px`;
             span.style.transitionDuration = `${randomDuration}s`;
 
-            // Optional: brighter color for distinction
             if (Math.random() < 0.1) {
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
             }
 
-            // Add to DOM
             container.appendChild(span);
 
-            // Trigger the transition after the element is in the DOM
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
-            // Clean up: Remove the element after its animation is complete
             setTimeout(
                 () => {
                     span.remove();
@@ -89,36 +80,46 @@
             }
         }
 
-        // --- Event Handlers (Conditional Logic based on screen size) ---
+        // --- Event Handlers (Strict Conditional Attachment) ---
 
         if (isMobileViewport()) {
-            // Mobile (<= 600px): Use touchstart/tap events
+            // MOBILE SETUP (<= 600px): Click to Start/Click Section to Stop
 
-            // 1. Tap on codeDiv to start the rain
-            codeDiv.addEventListener("pointerenter", () => {
-                console.log("mobile in");
+            // 1. Click on codeDiv to START the rain indefinitely.
+            // Using 'click' here is reliable because we are ONLY registering this handler for mobile.
+            codeDiv.addEventListener("click", (event) => {
+                // Ignore click if it's on the nested button
+                if (event.target.tagName.toLowerCase() === "button") {
+                    return;
+                }
                 startRain();
             });
 
-            // 2. Tap on codeSection to stop the rain
-            container.addEventListener("pointerenter", () => {
-                console.log("mobile out");
-                stopRain();
-            });
+            // 2. Click on the parent section (#code) to STOP the rain.
+            // This catches clicks outside of the codeDiv content.
+            codeSection.addEventListener("click", (event) => {
+                // Check if the click occurred on the parent section itself OR the binary container (behind codeDiv)
+                // AND the rain is currently running.
+                const isClickOutsideCodeDiv =
+                    !codeDiv.contains(event.target) ||
+                    event.target === codeSection;
 
-            // Ensure the initial state is off when loading on mobile
-            stopRain();
+                if (isClickOutsideCodeDiv && intervalId !== null) {
+                    stopRain();
+                }
+            });
         } else {
-            // Desktop (> 600px): Use hover events
+            // DESKTOP SETUP (> 600px): Hover to Start/Stop
             codeDiv.addEventListener("mouseenter", startRain);
             codeDiv.addEventListener("mouseleave", stopRain);
         }
 
-        // Handle resizing (If the user resizes past the breakpoint while running, stop the rain)
+        // --- Cleanup ---
+        stopRain(); // Ensure it's off by default on load
+
         window.addEventListener("resize", () => {
-            if (intervalId !== null) {
-                stopRain();
-            }
+            // Stop the rain when the window size changes (e.g., rotating tablet)
+            stopRain();
         });
     });
 </script>
