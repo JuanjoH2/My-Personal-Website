@@ -4,7 +4,6 @@
         <button onclick="window.location.href='/code'"> </button>
     </div>
 
-    <!-- Container for the binary rain effect. It sits behind the code box. -->
     <div id="binaryRainContainer"></div>
 </section>
 
@@ -27,28 +26,29 @@
         // High spawn rate for a dense rain effect
         const spawnRate = 50;
 
+        // Helper function to check for touch devices or small screens
+        function isMobile() {
+            // Checks for touch events support OR if the viewport width is narrow (e.g., less than 768px)
+            return (
+                "ontouchstart" in window ||
+                navigator.maxTouchPoints > 0 ||
+                window.innerWidth < 768
+            );
+        }
+
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
 
             const span = document.createElement("span");
-            // Consistent class name
             span.className = "binary-drop";
             span.textContent = word;
 
             // --- MATRIX RAIN EFFECT PROPERTIES ---
 
-            // Random horizontal start position (0% to 100%)
             const randomXStart = Math.random() * 100;
-
-            // Fall distance in VH units: from its initial off-screen position, it must fall
-            // at least 100vh to pass the bottom edge of the section.
             const fallDistanceVh = Math.random() * 50 + 100; // 100vh to 150vh
-
-            // Random duration (fall speed)
             const randomDuration = Math.random() * 3 + 2; // 2.0s to 5.0s
-
-            // Random size for depth/variation
             const randomSize = Math.floor(Math.random() * 14) + 12; // 12px to 26px
 
             // Apply dynamic CSS for starting position and size
@@ -58,7 +58,7 @@
 
             // Optional: brighter color for distinction
             if (Math.random() < 0.1) {
-                span.style.color = "#00ffff";
+                span.style.color = "#0091e1";
                 span.style.opacity = "1";
             }
 
@@ -67,7 +67,6 @@
 
             // Trigger the transition after the element is in the DOM
             requestAnimationFrame(() => {
-                // The transition happens between the CSS default (translateY(-100%)) and this target value
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
@@ -81,7 +80,6 @@
         }
 
         function startRain() {
-            // Only start if it's not already running
             if (intervalId !== null) return;
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
         }
@@ -93,28 +91,15 @@
             }
         }
 
-        // --- Event Handlers ---
-
-        // 1. Desktop: Mouse Events
-        codeDiv.addEventListener("mouseenter", startRain);
-        codeDiv.addEventListener("mouseleave", stopRain);
-
-        // 2. Mobile: Touch Events (The Fix)
-        // Note: For touch, a tap initiates both the rain AND the button's navigation.
-        // We start the rain on 'touchstart' and let the page navigation stop it.
-        // If the user taps the background of codeDiv, the rain will start and persist
-        // until they tap somewhere else on the page (though we don't have a specific
-        // 'stop' for that case, it often clears itself).
-        codeDiv.addEventListener("touchstart", startRain, { passive: true });
-
-        // Use 'touchend' to stop the rain if they lift their finger outside the button
-        // and aren't navigating. (Passive is important for touch event performance).
-        codeDiv.addEventListener("touchend", stopRain);
-        codeDiv.addEventListener("touchcancel", stopRain);
-
-        // 3. Prevent Rain when the button is actively clicked/tapped (optional cleanup)
-        // You could add logic here to *only* show the rain if the button wasn't the target.
-        // For now, the existing navigation prevents long rain, which is usually fine.
+        // --- Event Handlers (Conditional Logic) ---
+        if (!isMobile()) {
+            // Desktop: Use hover events
+            codeDiv.addEventListener("mouseenter", startRain);
+            codeDiv.addEventListener("mouseleave", stopRain);
+        } else {
+            // Mobile: Auto-start the rain immediately on load
+            startRain();
+        }
     });
 </script>
 
@@ -131,7 +116,7 @@
     #codeDiv {
         position: relative;
         z-index: 6;
-        /* Make sure this area is tappable for the effect */
+        /* Ensure the area is responsive to touch */
         touch-action: manipulation;
     }
 
@@ -155,13 +140,14 @@
         top: 0;
         left: 0;
 
-        /* 💡 THE CRITICAL FIX: Start 100% of its own height UP and OFF-SCREEN. */
+        /* CRITICAL: Start 100% of its own height UP and OFF-SCREEN. */
         transform: translateY(-100%);
 
         /* Base styles */
         font-weight: bold;
         white-space: nowrap;
-        color: white; /* Classic Matrix green */
+        /* Updated color to white/light gray for contrast on dark background */
+        color: white;
         opacity: 0.8;
 
         /* Ensure the transition property is explicitly defined */
