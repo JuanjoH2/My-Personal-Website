@@ -95,13 +95,13 @@
             // Mobile (<= 600px): Use touchstart/tap events
 
             // 1. Tap on codeDiv to start the rain
-            codeDiv.addEventListener("click", () => {
+            codeDiv.addEventListener("mouseenter", () => {
                 console.log("mobile in");
                 startRain();
             });
 
             // 2. Tap on codeSection to stop the rain
-            container.addEventListener("click", () => {
+            container.addEventListener("mouseenter", () => {
                 console.log("mobile out");
                 stopRain();
             });
