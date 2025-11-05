@@ -91,25 +91,21 @@
 
         // --- Event Handlers (Conditional Logic based on screen size) ---
 
-        if (!isMobileViewport()) {
-            // Desktop (> 600px): Use hover events
-            codeDiv.addEventListener("mouseenter", startRain);
-            codeDiv.addEventListener("mouseleave", stopRain);
-        } else {
+        if (isMobileViewport()) {
             // Mobile (<= 600px): Use touchstart/tap events
 
             // 1. Tap on codeDiv to start the rain
-            codeDiv.addEventListener("touchstart", startRain, {
-                passive: false,
-            });
+            codeDiv.addEventListener("click", startRain);
 
             // 2. Tap on codeSection to stop the rain
-            container.addEventListener("touchstart", stopRain, {
-                passive: false,
-            });
+            container.addEventListener("click", stopRain);
 
             // Ensure the initial state is off when loading on mobile
             stopRain();
+        } else {
+            // Desktop (> 600px): Use hover events
+            codeDiv.addEventListener("mouseenter", startRain);
+            codeDiv.addEventListener("mouseleave", stopRain);
         }
 
         // Handle resizing (If the user resizes past the breakpoint while running, stop the rain)
