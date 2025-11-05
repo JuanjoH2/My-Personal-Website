@@ -13,7 +13,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        const mobileBreakpoint = 600; // Breakpoint for mobile activation
+        const mobileBreakpoint = 600;
 
         if (!container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
@@ -22,15 +22,11 @@
 
         let intervalId = null;
 
-        // Binary digits
         const WORDS = ["1", "0"];
-
-        // High spawn rate for a dense rain effect
         const spawnRate = 50;
 
         // Helper function to check if we are in the mobile viewport range
         function isMobileViewport() {
-            // Check if the current window width is less than or equal to the defined breakpoint
             return window.innerWidth <= mobileBreakpoint;
         }
 
@@ -42,33 +38,26 @@
             span.className = "binary-drop";
             span.textContent = word;
 
-            // --- MATRIX RAIN EFFECT PROPERTIES ---
-
             const randomXStart = Math.random() * 100;
-            const fallDistanceVh = Math.random() * 50 + 100; // 100vh to 150vh
-            const randomDuration = Math.random() * 3 + 2; // 2.0s to 5.0s
-            const randomSize = Math.floor(Math.random() * 14) + 12; // 12px to 26px
+            const fallDistanceVh = Math.random() * 50 + 100;
+            const randomDuration = Math.random() * 3 + 2;
+            const randomSize = Math.floor(Math.random() * 14) + 12;
 
-            // Apply dynamic CSS for starting position and size
             span.style.left = `${randomXStart}%`;
             span.style.fontSize = `${randomSize}px`;
             span.style.transitionDuration = `${randomDuration}s`;
 
-            // Optional: brighter color for distinction
             if (Math.random() < 0.1) {
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
             }
 
-            // Add to DOM
             container.appendChild(span);
 
-            // Trigger the transition after the element is in the DOM
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
-            // Clean up: Remove the element after its animation is complete
             setTimeout(
                 () => {
                     span.remove();
@@ -89,30 +78,55 @@
             }
         }
 
-        // --- Event Handlers (Conditional Logic based on screen size) ---
+        // Mobile Tap-to-Toggle logic
+        function toggleRain(event) {
+            // 1. Allow the navigation button to work
+            if (event.target.tagName.toLowerCase() === "button") {
+                return;
+            }
 
-        if (isMobileViewport()) {
-            // Mobile (<= 600px): Use touchstart/tap events
+            // 2. CRITICAL: Prevents the browser from firing emulated mouse events (like mouseenter/mouseleave)
+            event.preventDefault();
 
-            // 1. Tap on codeDiv to start the rain
-            codeDiv.addEventListener("click", startRain);
-
-            // 2. Tap on codeSection to stop the rain
-            container.addEventListener("click", stopRain);
-
-            // Ensure the initial state is off when loading on mobile
-            stopRain();
-        } else {
-            // Desktop (> 600px): Use hover events
-            codeDiv.addEventListener("mouseenter", startRain);
-            codeDiv.addEventListener("mouseleave", stopRain);
-        }
-
-        // Handle resizing (If the user resizes past the breakpoint while running, stop the rain)
-        window.addEventListener("resize", () => {
-            if (intervalId !== null) {
+            if (intervalId === null) {
+                startRain();
+            } else {
                 stopRain();
             }
+        }
+
+        // --- Event Handlers ---
+
+        // 1. Desktop Listeners (Always registered, but only active if the screen is large)
+        codeDiv.addEventListener("mouseenter", () => {
+            // Only execute if the current view is NOT mobile
+            if (!isMobileViewport()) {
+                startRain();
+            }
+        });
+        codeDiv.addEventListener("mouseleave", () => {
+            // Only execute if the current view is NOT mobile
+            if (!isMobileViewport()) {
+                stopRain();
+            }
+        });
+
+        // 2. Mobile Listener (Only registered if the screen is small)
+        if (isMobileViewport()) {
+            // Use 'touchstart' instead of 'click' for instant, non-conflicting feedback
+            // passive: false is required to allow event.preventDefault() for a smooth toggle
+            codeDiv.addEventListener("touchstart", toggleRain, {
+                passive: false,
+            });
+        }
+
+        // 3. Cleanup on load and resize
+        stopRain(); // Ensure it's off by default
+
+        window.addEventListener("resize", () => {
+            // Simple cleanup: stop the rain if the window size changes significantly
+            stopRain();
+            // A more complex application would re-register listeners, but for simple cleanup, this is effective.
         });
     });
 </script>
