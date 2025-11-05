@@ -4,6 +4,7 @@
         <button onclick="window.location.href='/code'"> </button>
     </div>
 
+    <!-- Container for the binary rain effect. It sits behind the code box. -->
     <div id="binaryRainContainer"></div>
 </section>
 
@@ -12,6 +13,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
+        const mobileBreakpoint = 600; // Breakpoint for mobile activation
 
         if (!container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
@@ -26,14 +28,9 @@
         // High spawn rate for a dense rain effect
         const spawnRate = 50;
 
-        // Helper function to check for touch devices or small screens
-        function isMobile() {
-            // Checks for touch events support OR if the viewport width is narrow (e.g., less than 768px)
-            return (
-                "ontouchstart" in window ||
-                navigator.maxTouchPoints > 0 ||
-                window.innerWidth < 768
-            );
+        // Helper function to check if we are in the mobile viewport range
+        function isMobileView() {
+            return window.innerWidth <= mobileBreakpoint;
         }
 
         function spawnBinaryDrop() {
@@ -91,15 +88,51 @@
             }
         }
 
-        // --- Event Handlers (Conditional Logic) ---
-        if (!isMobile()) {
-            // Desktop: Use hover events
+        function toggleRain() {
+            if (intervalId === null) {
+                startRain();
+            } else {
+                stopRain();
+            }
+        }
+
+        // --- Event Handlers (Conditional Logic based on initial screen size) ---
+
+        if (!isMobileView()) {
+            // Desktop (> 600px): Use hover events
             codeDiv.addEventListener("mouseenter", startRain);
             codeDiv.addEventListener("mouseleave", stopRain);
         } else {
-            // Mobile: Auto-start the rain immediately on load
-            startRain();
+            // Mobile (<= 600px): Use click/tap events
+
+            // 1. Tap on codeDiv to start/stop the rain
+            codeDiv.addEventListener("click", (event) => {
+                // If the user clicks the actual button, let the navigation happen and don't toggle the rain state
+                if (event.target.tagName.toLowerCase() === "button") {
+                    return;
+                }
+                toggleRain();
+            });
+
+            // 2. Tap anywhere else on the document to stop the rain
+            document.addEventListener("click", (event) => {
+                // Check if the click target is outside the codeDiv container
+                // AND the rain is currently running
+                if (!codeDiv.contains(event.target) && intervalId !== null) {
+                    stopRain();
+                }
+            });
+
+            // Ensure the initial state is off when loading on mobile
+            stopRain();
         }
+
+        // Handle resizing (If the user resizes past the breakpoint while running, stop the rain)
+        window.addEventListener("resize", () => {
+            if (intervalId !== null) {
+                stopRain();
+            }
+        });
     });
 </script>
 
@@ -147,7 +180,7 @@
         font-weight: bold;
         white-space: nowrap;
         /* Updated color to white/light gray for contrast on dark background */
-        color: white;
+        color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
 
         /* Ensure the transition property is explicitly defined */
