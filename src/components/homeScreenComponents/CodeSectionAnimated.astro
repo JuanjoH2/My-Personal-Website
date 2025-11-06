@@ -4,28 +4,23 @@
         <button onclick="window.location.href='/code'"> </button>
     </div>
 
-    <!-- Container for the binary rain effect. It sits behind the code box. -->
     <div id="binaryRainContainer"></div>
 </section>
 
 <script is:inline>
     // Wait for the entire DOM to load before trying to access elements
     document.addEventListener("DOMContentLoaded", () => {
-        const codeSection = document.getElementById("code");
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
-        const codeSectionWidth = codeSection.clientWidth;
-        var toggleRainMobile = true;
-        // We no longer need the mobileBreakpoint constant here.
 
-        if (!codeSection || !container || !codeDiv) {
+        if (!container || !codeDiv) {
             console.error("Required DOM elements not found for animation.");
             return;
         }
 
         let intervalId = null;
         const WORDS = ["1", "0"];
-        const spawnRate = 50;
+        const spawnRate = 50; // Rate in milliseconds (e.g., 50ms = 20 drops per second)
 
         // Function to create and drop a single binary character
         function spawnBinaryDrop() {
@@ -36,15 +31,16 @@
             span.textContent = word;
 
             const randomXStart = Math.random() * 100;
-            // Use container height for fall distance to ensure it always falls completely out
+            // Use a large viewport height for fall distance
             const fallDistanceVh = 150;
-            const randomDuration = Math.random() * 3 + 2;
+            const randomDuration = Math.random() * 3 + 2; // Fall duration between 2s and 5s
             const randomSize = Math.floor(Math.random() * 14) + 12;
 
             span.style.left = `${randomXStart}%`;
             span.style.fontSize = `${randomSize}px`;
             span.style.transitionDuration = `${randomDuration}s`;
 
+            // Style a small percentage of drops as blue/accented
             if (Math.random() < 0.1) {
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
@@ -62,63 +58,27 @@
                 () => {
                     span.remove();
                 },
-                randomDuration * 1000 + 100,
+                randomDuration * 1000 + 100, // Add a slight buffer after transition finishes
             );
         }
 
         // Start the continuous rain animation
         function startRain() {
+            // Only start if it's not already running
             if (intervalId !== null) return;
-            // Prevent starting if the click/enter was on the button itself
-            // This is primarily for the mobile tap scenario
 
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
             codeDiv.classList.add("rain-active");
+            console.log("Code rain started.");
         }
 
-        // Stop the rain animation
-        function stopRain() {
-            if (intervalId !== null) {
-                clearInterval(intervalId);
-                intervalId = null;
-                // For mobile, we remove the listener that checks for clicks outside.
-                if (codeSectionWidth < 600) {
-                    document.removeEventListener("click", handleOutsideClick);
-                    console.log("mobile: Removed outside click listener.");
-                }
-                codeDiv.classList.remove("rain-active");
-            }
-        }
-
-        // --- Simplified Event Handlers ---
-
-        if (codeSectionWidth >= 600) {
-            // 1. MouseEnter/TouchStart triggers startRain
-            codeDiv.addEventListener("mouseenter", () => {
-                console.log("computer enter");
-                startRain();
-            });
-
-            // 2. MouseLeave/TouchEnd triggers stopRain
-            codeDiv.addEventListener("mouseleave", () => {
-                console.log("computer leave");
-                stopRain();
-            });
-        } else {
-            if (!toggleRainMobile) {
-                codeDiv.addEventListener("click", () => {
-                    console.log("mobile end");
-                    stopRain();
-                });
-                toggleRainMobile = true;
-            } else {
-                codeDiv.addEventListener("click", () => {
-                    console.log("mobile start");
-                    startRain();
-                });
-                toggleRainMobile = false;
-            }
-        }
+        // --- Single Tap Event Handler ---
+        // A 'click' event works for taps on mobile and clicks on desktop.
+        // It's a robust cross-device solution for a one-time activation.
+        codeDiv.addEventListener("click", () => {
+            // This is the simplest way to trigger the rain on a tap
+            startRain();
+        });
     });
 </script>
 
