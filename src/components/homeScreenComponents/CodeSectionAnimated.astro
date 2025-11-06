@@ -32,9 +32,6 @@
         const WORDS = ["1", "0"];
         const spawnRate = 50;
 
-        // State flag for touch devices: false means rain is OFF.
-        let isRainActive = false;
-
         // --- Core Animation Functions ---
 
         function spawnBinaryDrop() {
@@ -76,7 +73,10 @@
             if (intervalId !== null) return;
             intervalId = setInterval(spawnBinaryDrop, spawnRate);
             codeDiv.classList.add("rain-active");
-            isRainActive = true;
+            // Add a specific class to indicate mobile rain is active
+            if (isTouchDevice()) {
+                codeDiv.classList.add("mobile-rain-on");
+            }
         }
 
         function stopRain() {
@@ -84,20 +84,22 @@
                 clearInterval(intervalId);
                 intervalId = null;
                 codeDiv.classList.remove("rain-active");
-                isRainActive = false;
+                codeDiv.classList.remove("mobile-rain-on");
             }
         }
 
-        // --- Event Handlers (Guarded by Device Type) ---
+        // --- Event Handlers ---
 
-        // 1. Desktop Hover Listeners (Only active on non-touch devices)
+        // 1. Desktop Hover Listeners
         codeDiv.addEventListener("mouseenter", () => {
+            // ONLY start on hover if it's NOT a touch device
             if (!isTouchDevice()) {
                 startRain();
             }
         });
 
         codeDiv.addEventListener("mouseleave", () => {
+            // ONLY stop on leave if it's NOT a touch device
             if (!isTouchDevice()) {
                 stopRain();
             }
@@ -105,29 +107,29 @@
 
         // 2. Mobile Touch Toggle (Using native touchstart)
         codeDiv.addEventListener("touchstart", (event) => {
-            // Prevent the synthetic mouse events from firing after touchstart
-            event.preventDefault();
-
-            // Only execute if it IS a touch device
+            // Exit immediately if not a touch device
             if (!isTouchDevice()) {
                 return;
             }
 
-            // Check if the target is the navigation button
+            // CRITICAL: Prevent the default action (like generating synthetic mouse events)
+            // This is the key to preventing the immediate stop on tap-up.
+            event.preventDefault();
+
+            // Do not toggle if the tap is on the navigation button
             if (event.target === navButton) {
-                // Allow button click to proceed to navigation
                 return;
             }
 
-            // Toggle logic
-            if (isRainActive) {
+            // Toggle logic based on the 'mobile-rain-on' class
+            if (codeDiv.classList.contains("mobile-rain-on")) {
                 stopRain();
             } else {
                 startRain();
             }
         });
 
-        // 3. Stop rain on navigation button click (Always use the 'click' event here)
+        // 3. Stop rain on navigation button click
         navButton.addEventListener("click", (e) => {
             e.stopPropagation();
             stopRain();
@@ -135,12 +137,18 @@
 
         // 4. Global stop handler (for touch devices only: tap outside to stop)
         document.addEventListener("click", (event) => {
-            // We use 'click' for the global stop because it's the final event in the touch sequence.
+            // Check if touch device AND the rain is currently toggled on mobile
+            if (
+                !isTouchDevice() ||
+                !codeDiv.classList.contains("mobile-rain-on")
+            ) {
+                return;
+            }
 
             const isClickOnCodeDiv = codeDiv.contains(event.target);
 
-            // If it is a touch device, rain is running, AND click is outside
-            if (isTouchDevice() && isRainActive && !isClickOnCodeDiv) {
+            // If rain is running and click is outside the box, stop the rain.
+            if (!isClickOnCodeDiv) {
                 stopRain();
             }
         });
@@ -150,7 +158,7 @@
             stopRain();
         });
 
-        stopRain(); // Ensure the animation starts disabled
+        stopRain();
     });
 </script>
 
@@ -159,7 +167,6 @@
      * LOCAL STYLES
      */
     #code {
-        /* overflow: hidden is critical to hide the rain when it falls past the section boundary */
         overflow: hidden;
         position: relative;
     }
@@ -167,7 +174,7 @@
     #codeDiv {
         position: relative;
         z-index: 6;
-        /* CRITICAL: Ensures the touchstart event on this element is not hijacked by the browser for scrolling */
+        /* Ensures the touchstart event is not ignored/delayed by the browser */
         touch-action: manipulation;
     }
 
@@ -177,9 +184,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* Ensure the container is behind the 'Code' box's content */
         z-index: 0;
-        /* Allows clicks/touches to pass through to the element behind it (the codeDiv) */
         pointer-events: none;
     }
 
@@ -187,17 +192,11 @@
     #binaryRainContainer .binary-drop {
         position: absolute;
         z-index: 5;
-
-        /* CRITICAL: Start off-screen at the top */
         transform: translateY(-100%);
-
-        /* Base styles */
         font-weight: bold;
         white-space: nowrap;
         color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
-
-        /* Define transition property for smooth falling */
         transition:
             transform linear,
             color 0.5s ease-out;
