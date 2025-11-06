@@ -9,12 +9,13 @@
 </section>
 
 <script is:inline>
-    // Define the mobile breakpoint globally for consistency
-    const MOBILE_BREAKPOINT = 600;
-
-    // Helper function to check the current viewport status
-    function isMobileViewport() {
-        return window.innerWidth < MOBILE_BREAKPOINT;
+    // Helper function to reliably detect touch support on the client device.
+    function isTouchDevice() {
+        return (
+            "ontouchstart" in window ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0
+        );
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -31,7 +32,8 @@
         const WORDS = ["1", "0"];
         const spawnRate = 50;
 
-        // State flag for mobile: true means rain is OFF, click will START it.
+        // State flag for touch devices:
+        // false means rain is OFF, a click will START it (toggle on).
         let toggleRainMobile = false;
 
         // --- Core Animation Functions ---
@@ -44,6 +46,7 @@
             span.textContent = word;
 
             const randomXStart = Math.random() * 100;
+            // Use a large Vh value to ensure the element falls completely out of view
             const fallDistanceVh = 150;
             const randomDuration = Math.random() * 3 + 2;
             const randomSize = Math.floor(Math.random() * 14) + 12;
@@ -53,16 +56,19 @@
             span.style.transitionDuration = `${randomDuration}s`;
 
             if (Math.random() < 0.1) {
+                // Highlight color for some drops
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
             }
 
             container.appendChild(span);
 
+            // Use rAF to ensure CSS transition is applied on the next frame
             requestAnimationFrame(() => {
                 span.style.transform = `translateY(${fallDistanceVh}vh)`;
             });
 
+            // Clean up the element after it finishes falling
             setTimeout(
                 () => {
                     span.remove();
@@ -85,64 +91,63 @@
             }
         }
 
-        // --- Event Handlers (Attached UNCONDITIONALLY) ---
+        // --- Event Handlers (Guarded by Device Type) ---
 
-        // Desktop Hover (mouseenter/mouseleave)
+        // 1. Desktop Hover Listeners (Only active on non-touch devices)
         codeDiv.addEventListener("mouseenter", () => {
-            if (!isMobileViewport()) {
+            if (!isTouchDevice()) {
                 startRain();
             }
         });
 
         codeDiv.addEventListener("mouseleave", () => {
-            if (!isMobileViewport()) {
+            if (!isTouchDevice()) {
                 stopRain();
             }
         });
 
-        // Mobile Click Toggle
+        // 2. Mobile Click Toggle (Only active on touch devices)
         codeDiv.addEventListener("click", (event) => {
-            // Do not react if click originated from the button, or if not mobile
-            if (event.target === navButton || !isMobileViewport()) {
+            // If it's not a touch device, or if the click is on the navigation button, exit.
+            if (!isTouchDevice() || event.target === navButton) {
                 return;
             }
 
+            // Toggle logic: If rain is on, turn it off. If off, turn it on.
             if (toggleRainMobile) {
-                // Rain is currently ON, so STOP it
                 stopRain();
-                toggleRainMobile = false;
             } else {
-                // Rain is currently OFF, so START it
                 startRain();
-                toggleRainMobile = true;
             }
+            toggleRainMobile = !toggleRainMobile;
         });
 
-        // Stop rain immediately on navigation click
+        // 3. Stop rain on navigation button click
         navButton.addEventListener("click", (e) => {
             e.stopPropagation();
             stopRain();
+            // Reset mobile flag just in case
+            toggleRainMobile = false;
         });
 
-        // Global click handler to stop rain if active and user clicks outside
+        // 4. Global stop handler (for touch devices only: click outside to stop)
         document.addEventListener("click", (event) => {
             const isClickOnCodeDiv = codeDiv.contains(event.target);
 
-            // If mobile, rain is running (toggleRainMobile is true), AND click is outside
-            if (isMobileViewport() && toggleRainMobile && !isClickOnCodeDiv) {
+            // If it is a touch device, rain is running, AND click is outside
+            if (isTouchDevice() && toggleRainMobile && !isClickOnCodeDiv) {
                 stopRain();
                 toggleRainMobile = false;
             }
         });
 
-        // Handle screen resize (forces a reset)
+        // --- Initialization and Cleanup ---
         window.addEventListener("resize", () => {
             stopRain();
             toggleRainMobile = false; // Reset mobile flag
         });
 
-        // --- Initialization ---
-        stopRain();
+        stopRain(); // Ensure the animation starts disabled
     });
 </script>
 
