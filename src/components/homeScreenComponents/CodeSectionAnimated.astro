@@ -4,25 +4,38 @@
         <button onclick="window.location.href='/code'"> </button>
     </div>
 
+    <!-- Container for the binary rain effect. It sits behind the code box. -->
     <div id="binaryRainContainer"></div>
 </section>
 
 <script is:inline>
-    // Wait for the entire DOM to load before trying to access elements
+    // Helper function to reliably detect touch support on the client device.
+    function isTouchDevice() {
+        return (
+            "ontouchstart" in window ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0
+        );
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById("binaryRainContainer");
         const codeDiv = document.getElementById("codeDiv");
+        const navButton = codeDiv.querySelector("button");
 
-        if (!container || !codeDiv) {
+        if (!container || !codeDiv || !navButton) {
             console.error("Required DOM elements not found for animation.");
             return;
         }
 
-        let intervalId = null;
-        const WORDS = ["1", "0"];
-        const spawnRate = 50; // Rate in milliseconds (e.g., 50ms = 20 drops per second)
+        let animationFrameId = null;
+        let lastSpawnTime = 0;
+        const spawnInterval = 50; // Target spawn rate (1 drop every 50ms)
 
-        // Function to create and drop a single binary character
+        const WORDS = ["1", "0"];
+
+        // --- Core Animation Functions ---
+
         function spawnBinaryDrop() {
             const randomIndex = Math.floor(Math.random() * WORDS.length);
             const word = WORDS[randomIndex];
@@ -31,16 +44,14 @@
             span.textContent = word;
 
             const randomXStart = Math.random() * 100;
-            // Use a large viewport height for fall distance
             const fallDistanceVh = 150;
-            const randomDuration = Math.random() * 3 + 2; // Fall duration between 2s and 5s
+            const randomDuration = Math.random() * 3 + 2;
             const randomSize = Math.floor(Math.random() * 14) + 12;
 
             span.style.left = `${randomXStart}%`;
             span.style.fontSize = `${randomSize}px`;
             span.style.transitionDuration = `${randomDuration}s`;
 
-            // Style a small percentage of drops as blue/accented
             if (Math.random() < 0.1) {
                 span.style.color = "#0091e1";
                 span.style.opacity = "1";
@@ -58,44 +69,128 @@
                 () => {
                     span.remove();
                 },
-                randomDuration * 1000 + 100, // Add a slight buffer after transition finishes
+                randomDuration * 1000 + 100,
             );
         }
 
-        // Start the continuous rain animation
-        function startRain() {
-            // Only start if it's not already running
-            if (intervalId !== null) return;
+        // The requestAnimationFrame loop
+        function gameLoop(timestamp) {
+            // Check if enough time has passed since the last drop
+            if (timestamp - lastSpawnTime > spawnInterval) {
+                spawnBinaryDrop();
+                lastSpawnTime = timestamp;
+            }
 
-            intervalId = setInterval(spawnBinaryDrop, spawnRate);
-            codeDiv.classList.add("rain-active");
-            console.log("Code rain started.");
+            // Continue the loop only if animationFrameId is not cancelled
+            animationFrameId = requestAnimationFrame(gameLoop);
         }
 
-        // --- Single Tap Event Handler ---
-        // A 'click' event works for taps on mobile and clicks on desktop.
-        // It's a robust cross-device solution for a one-time activation.
-        codeDiv.addEventListener("click", () => {
-            // This is the simplest way to trigger the rain on a tap
-            startRain();
+        function startRain() {
+            if (animationFrameId !== null) return;
+            // Reset time and start the rAF loop
+            lastSpawnTime = performance.now();
+            animationFrameId = requestAnimationFrame(gameLoop);
+
+            codeDiv.classList.add("rain-active");
+            // Add a specific class to indicate mobile rain is active
+            if (isTouchDevice()) {
+                codeDiv.classList.add("mobile-rain-on");
+            }
+        }
+
+        function stopRain() {
+            if (animationFrameId !== null) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+                codeDiv.classList.remove("rain-active");
+                codeDiv.classList.remove("mobile-rain-on");
+            }
+        }
+
+        // --- Event Handlers ---
+
+        // 1. Desktop Hover Listeners
+        codeDiv.addEventListener("mouseenter", () => {
+            if (!isTouchDevice()) {
+                startRain();
+            }
         });
+
+        codeDiv.addEventListener("mouseleave", () => {
+            if (!isTouchDevice()) {
+                stopRain();
+            }
+        });
+
+        // 2. Mobile Touch Toggle (Using native touchstart)
+        codeDiv.addEventListener("touchstart", (event) => {
+            // Exit immediately if not a touch device
+            if (!isTouchDevice()) {
+                return;
+            }
+
+            // CRITICAL: Prevent the default action (like generating synthetic mouse events)
+            event.preventDefault();
+
+            // Do not toggle if the tap is on the navigation button
+            if (event.target === navButton) {
+                return;
+            }
+
+            // Toggle logic based on the 'mobile-rain-on' class
+            if (codeDiv.classList.contains("mobile-rain-on")) {
+                stopRain();
+            } else {
+                startRain();
+            }
+        });
+
+        // 3. Stop rain on navigation button click
+        navButton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            stopRain();
+        });
+
+        // 4. Global stop handler (for touch devices only: tap outside to stop)
+        document.addEventListener("click", (event) => {
+            // Check if touch device AND the rain is currently toggled on mobile
+            if (
+                !isTouchDevice() ||
+                !codeDiv.classList.contains("mobile-rain-on")
+            ) {
+                return;
+            }
+
+            const isClickOnCodeDiv = codeDiv.contains(event.target);
+
+            // If rain is running and click is outside the box, stop the rain.
+            if (!isClickOnCodeDiv) {
+                stopRain();
+            }
+        });
+
+        // --- Initialization and Cleanup ---
+        window.addEventListener("resize", () => {
+            stopRain();
+        });
+
+        stopRain();
     });
 </script>
 
 <style is:global>
     /*
-     * LOCAL STYLES (is:global added to prevent Astro scoping, allowing JS-created elements to be styled)
+     * LOCAL STYLES
      */
     #code {
-        /* overflow: hidden is critical to hide the rain when it falls past the section boundary */
         overflow: hidden;
         position: relative;
     }
 
     #codeDiv {
         position: relative;
-        z-index: 5;
-        /* Ensure the area is responsive to touch */
+        z-index: 6;
+        /* CRITICAL: Ensures the touchstart event is not ignored/delayed by the browser */
         touch-action: manipulation;
     }
 
@@ -105,26 +200,19 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* Ensure the container is behind the 'Code' box */
         z-index: 0;
-        pointer-events: none; /* Allows clicks/touches to pass through to the element behind it */
+        pointer-events: none;
     }
 
-    /* 💥 HIGHLY SPECIFIC SELECTOR 💥 */
+    /* Styles for the individual falling characters */
     #binaryRainContainer .binary-drop {
         position: absolute;
         z-index: 5;
-
-        /* CRITICAL: Start 100% of its own height UP and OFF-SCREEN. */
         transform: translateY(-100%);
-
-        /* Base styles */
         font-weight: bold;
         white-space: nowrap;
         color: rgba(255, 255, 255, 0.6);
         opacity: 0.8;
-
-        /* Ensure the transition property is explicitly defined */
         transition:
             transform linear,
             color 0.5s ease-out;
