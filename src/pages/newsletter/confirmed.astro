@@ -1,0 +1,146 @@
+---
+import Header from "../../components/globalComponents/Header.astro";
+import Footer from "../../components/globalComponents/Footer.astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import Analytics from "@vercel/analytics/astro";
+import "../../styles/global.css";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <title>Email confirmed</title>
+
+        <!-- SOCIAL IMAGE -->
+        <meta
+            property="og:title"
+            content="Juanjo Hurtado | My Personal Website"
+        />
+        <meta
+            property="og:description"
+            content="Welcome to my personal website. Here you will find a self-help blog, a cool newsletter, and a showcase of my musical compositions & coding projects."
+        />
+        <meta property="og:url" content="https://juanjohurtado.com/" />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:image"
+            content="https://juanjohurtado.com/images/social-image.jpg"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="Juanjo Hurtado | My Personal Website"
+        />
+        <meta
+            name="twitter:description"
+            content="Welcome to my personal website. Here you will find a self-help blog, a cool newsletter, and a showcase of my musical compositions & coding projects."
+        />
+        <meta
+            name="twitter:image"
+            content="https://juanjohurtado.com/images/social-image.jpg"
+        />
+    </head>
+    <body>
+        <div id="backdrop" class="menu-backdrop"></div>
+        <Header />
+        <section class="success-section">
+            <div class="success-content">
+                <h1 class="title-text">
+                    Success! <br />
+                    You're Confirmed! 🎉
+                </h1>
+                <p class="body-text">
+                    Awesome! Your email has been confirmed. You're officially in
+                    the club.
+                </p>
+                <a href="/newsletter" class="redirect-button-style">
+                    Go to Newsletter Archive Now
+                </a>
+            </div>
+        </section>
+        <Footer />
+        <Analytics />
+        <SpeedInsights />
+    </body>
+</html>
+
+<style>
+    .success-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: black;
+        border: 1px solid white;
+        padding: 60px 40px;
+        border-radius: 16px;
+        color: white;
+        width: 512px;
+    }
+    .title-text {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #10b981;
+    }
+    .body-text {
+        font-size: 18px;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .redirect-button-style {
+        margin-top: 1.5rem;
+        background-color: black;
+        border: 1px solid white;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        text-decoration: none; /* Remove underline from anchor tag */
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer;
+    }
+    .redirect-button-style:hover {
+        color: #0091e1;
+        border: 1px solid #0091e1;
+    }
+    /**
+    * DISPLAY FOR MOBILE
+    */
+    @media (max-width: 600px) {
+        .success-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: black;
+            border: 1px solid white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            color: white;
+            width: 256px;
+        }
+        .title-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+        .body-text {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
