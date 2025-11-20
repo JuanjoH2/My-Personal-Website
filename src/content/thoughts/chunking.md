@@ -1,6 +1,6 @@
 ---
 title: "Chunking"
-pubDate: 2024-12-31
+pubDate: 2024-12-30
 author: "Juanjo Hurtado"
 description: "A programming concept to do complex tasks."
 tags: ["Thoughts", "Productivity"]
