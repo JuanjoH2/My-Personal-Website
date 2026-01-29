@@ -1,12 +1,12 @@
 ---
 title: "The Two-hit Theory"
-pubDate: 2025-01-12
+pubDate: 2025-01-13
 author: "Juanjo Hurtado"
 description: "A strategy for breaking the ice & meeting new people."
 tags: ["Thoughts", "Relationships"]
 ---
 
-Picture this: You go to a party with a good friend of yours, but you don’t know anybody else. You start looking around, and you realize everybody else is also coming in pairs or three-group people. 
+Picture this: You go to a party with a good friend of yours, but you don’t know anybody else. You start looking around, and you realize everybody else is also coming in pairs or three-group people.
 And hey! Let’s just say that you even see a pretty girl on the other side of the room with her friends, but you instantly say to yourself: “I would like to talk to her, but how do I break the ice without being weird?”. And here, my friend, is where the Two-hit Theory comes in.
 
 The Two-hit Theory basically says that little random natural interactions break the ice for you, and makes you closer to the other person (even if you don’t know them). Resulting in making the whole experience of meeting new people as natural as talking to your all-time friend in the morning.
