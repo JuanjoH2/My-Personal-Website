@@ -1,6 +1,6 @@
 ---
 title: "The Two-hit Theory"
-pubDate: 2025-01-13
+pubDate: 2025-01-12
 author: "Juanjo Hurtado"
 description: "A strategy for breaking the ice & meeting new people."
 tags: ["Thoughts", "Relationships"]
