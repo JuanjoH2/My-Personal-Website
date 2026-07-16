@@ -1,6 +1,6 @@
 ---
 title: "Beat Dissappointment"
-pubDate: 2025-03-04
+pubDate: 2025-03-05
 author: "Juanjo Hurtado"
 description: "A strategy to beat dissapointment."
 tags: ["Thoughts", "Relationships"]
