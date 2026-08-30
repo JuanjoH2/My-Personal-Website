@@ -14,7 +14,7 @@
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.2.0",
-    "astro": "^7.1.0",
+    "astro": "^7.2.8",
     "date-fns": "^4.1.0"
   }
 }
