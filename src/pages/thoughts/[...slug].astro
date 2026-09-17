@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import ThoughtLayout from "../../layouts/ThoughtLayout.astro";
 import { format } from "date-fns";
 
@@ -8,19 +8,19 @@ export async function getStaticPaths() {
     const thoughts = await getCollection("thoughts");
     return thoughts.map((thought) => {
         return {
-            params: { slug: thought.slug },
+            params: { slug: thought.id },
             props: { thought },
         };
     });
 }
 
 const { thought } = Astro.props;
-const { Content } = await thought.render();
+const { Content } = await render(thought);
 const formattedDate = format(thought.data.pubDate, "MMM do, yyy");
 
 // READING TIME CALCULATION
 const WPM = 200;
-const strippedContent = thought.body.replace(/<[^>]*>|[^a-zA-Z0-9\s]/g, "");
+const strippedContent = (thought.body ?? "").replace(/<[^>]*>|[^a-zA-Z0-9\s]/g, "");
 const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
 const readingTime = Math.ceil(wordCount / WPM);
 ---

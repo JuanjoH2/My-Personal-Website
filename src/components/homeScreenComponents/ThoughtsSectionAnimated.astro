@@ -28,97 +28,90 @@ const fullText = text;
     const cursorElement = document.getElementById("cursor");
     const hoverDiv = document.getElementById("thoughtsDiv");
 
-    // We must check if the elements exist before using them,
-    // though in Astro component scripts, they are usually guaranteed.
-    if (!textElement || !cursorElement || !hoverDiv) {
-        console.error("Typewriter elements not found in the DOM.");
-        return; // Stop the script if elements are missing
-    }
+    // We must check if the elements exist before using them
+    if (textElement && cursorElement && hoverDiv) {
+        let typingInterval = undefined;
+        let index = 0;
 
-    let typingInterval = undefined;
-    let index = 0;
-
-    // Helper function to get the current visible text length
-    function getCurrentTextLength() {
-        const textNodes = Array.from(textElement.childNodes).filter(
-            (node) => node.nodeType === Node.TEXT_NODE,
-        );
-        return textNodes.map((node) => node.textContent || "").join("").length;
-    }
-
-    // Function to handle adding characters one by one
-    function typeCharacter() {
-        if (index < fullText.length) {
-            const nextChar = fullText[index];
-
-            textElement.insertBefore(
-                document.createTextNode(nextChar),
-                cursorElement,
-            );
-            index++;
-        } else {
-            // Text is fully typed, stop the interval
-            if (typeof typingInterval === "number") {
-                clearInterval(typingInterval);
-                typingInterval = undefined;
-            }
-        }
-    }
-
-    // Function called on mouseenter
-    function startTyping() {
-        if (typeof typingInterval === "number") clearInterval(typingInterval);
-
-        cursorElement.style.display = "inline-block";
-        textElement.appendChild(cursorElement);
-
-        // We can cast the result of setInterval to 'any' or just leave it as 'number'
-        // to avoid TypeScript errors in plain JS, but since we removed the 'as'
-        // assertions earlier, we don't need the verbose 'as unknown as number' either.
-        typingInterval = setInterval(typeCharacter, 15);
-    }
-
-    // Function called on mouseleave
-    function startDeleting() {
-        if (typeof typingInterval === "number") clearInterval(typingInterval);
-
-        typingInterval = setInterval(() => {
+        // Helper function to get the current visible text length
+        function getCurrentTextLength() {
             const textNodes = Array.from(textElement.childNodes).filter(
                 (node) => node.nodeType === Node.TEXT_NODE,
             );
+            return textNodes.map((node) => node.textContent || "").join("").length;
+        }
 
-            if (textNodes.length > 0) {
-                const lastTextNode = textNodes[textNodes.length - 1];
+        // Function to handle adding characters one by one
+        function typeCharacter() {
+            if (index < fullText.length) {
+                const nextChar = fullText[index];
 
-                let content = lastTextNode.textContent;
-
-                if (content) {
-                    textElement.insertBefore(
-                        cursorElement,
-                        lastTextNode.nextSibling,
-                    );
-
-                    if (content.length > 1) {
-                        lastTextNode.textContent = content.slice(0, -1);
-                        index--;
-                    } else if (content.length === 1) {
-                        textElement.removeChild(lastTextNode);
-                        index--;
-                    }
-                }
+                textElement.insertBefore(
+                    document.createTextNode(nextChar),
+                    cursorElement,
+                );
+                index++;
             } else {
-                if (typeof typingInterval === "number")
+                // Text is fully typed, stop the interval
+                if (typeof typingInterval === "number") {
                     clearInterval(typingInterval);
-                typingInterval = undefined;
-                cursorElement.style.display = "none";
-                index = 0;
+                    typingInterval = undefined;
+                }
             }
-        }, 20);
-    }
+        }
 
-    // Attach event listeners to the hoverDiv
-    hoverDiv.addEventListener("mouseenter", startTyping);
-    hoverDiv.addEventListener("mouseleave", startDeleting);
+        // Function called on mouseenter
+        function startTyping() {
+            if (typeof typingInterval === "number") clearInterval(typingInterval);
+
+            cursorElement.style.display = "inline-block";
+            textElement.appendChild(cursorElement);
+
+            typingInterval = setInterval(typeCharacter, 15);
+        }
+
+        // Function called on mouseleave
+        function startDeleting() {
+            if (typeof typingInterval === "number") clearInterval(typingInterval);
+
+            typingInterval = setInterval(() => {
+                const textNodes = Array.from(textElement.childNodes).filter(
+                    (node) => node.nodeType === Node.TEXT_NODE,
+                );
+
+                if (textNodes.length > 0) {
+                    const lastTextNode = textNodes[textNodes.length - 1];
+
+                    let content = lastTextNode.textContent;
+
+                    if (content) {
+                        textElement.insertBefore(
+                            cursorElement,
+                            lastTextNode.nextSibling,
+                        );
+
+                        if (content.length > 1) {
+                            lastTextNode.textContent = content.slice(0, -1);
+                            index--;
+                        } else if (content.length === 1) {
+                            textElement.removeChild(lastTextNode);
+                            index--;
+                        }
+                    }
+                } else {
+                    if (typeof typingInterval === "number")
+                        clearInterval(typingInterval);
+                    typingInterval = undefined;
+                    cursorElement.style.display = "none";
+                    index = 0;
+                }
+            }, 20);
+        }
+
+        // Attach event listeners to the hoverDiv
+        hoverDiv.addEventListener("mouseenter", startTyping);
+        hoverDiv.addEventListener("mouseleave", startDeleting);
+    }
 </script>
 
 <style>

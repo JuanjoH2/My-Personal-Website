@@ -1,14 +1,14 @@
 ---
 export interface Props {
     thought: {
-        slug: string;
+        id: string;
         data: {
             title: string;
         };
     };
 }
 const { thought } = Astro.props as Props;
-const thoughtUrl = `/thoughts/${thought.slug}`;
+const thoughtUrl = `/thoughts/${thought.id}`;
 ---
 
 <div class="thought-card-div">

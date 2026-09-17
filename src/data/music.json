@@ -1,70 +1,81 @@
 [
-    {
-        "slug": "yidali",
-        "title": "Yidali",
-        "album": "M.A.",
-        "image": "/images/Yidali.jpg",
-        "audioFile": "/audio/Yidali.mp3",
-        "year": 2023,
-        "duration": "3:33",
-        "description": "Composed & produced during the beginning of 2023's summer. This piece was inspired with young love & excitement.",
-        "isAlternate": false
-    },
-    {
-        "slug": "ty",
-        "title": "Ty",
-        "album": "Russia",
-        "image": "/images/Ty.jpg",
-        "audioFile": "/audio/Ty.mp3",
-        "year": 2024,
-        "duration": "4:13",
-        "description": "Composed & produced during the end of 2023's winter. This piece celebrated frienship, mixed with a nostalgic mood.",
-        "isAlternate": false
-    },
-    {
-        "slug": "ty-piano",
-        "title": "Ty (piano version)",
-        "album": "Russia",
-        "image": "/images/Ty_pv.jpg",
-        "audioFile": "/audio/Ty_pv.mp3",
-        "year": 2024,
-        "duration": "4:13",
-        "description": "Description of the piece...",
-        "isAlternate": true,
-        "parentId": "ty"
-    },
-    {
-        "slug": "fragmentos-de-cristal",
-        "title": "Fragmentos de Cristal",
-        "album": "Castle",
-        "image": "/images/FragmentosDeCristal.jpg",
-        "audioFile": "/audio/FragmentosDeCristal.mp3",
-        "year": 2025,
-        "duration": "6:54",
-        "description": "Composed & produced during the end of 2024's winter. This piece was created & filled with hope.",
-        "isAlternate": false
-    },
-    {
-        "slug": "chemins-croises",
-        "title": "Chemins croisés",
-        "album": "Lumière",
-        "image": "/images/CheminsCroises.jpg",
-        "audioFile": "/audio/CheminsCroises.mp3",
-        "year": 2025,
-        "duration": "4:39",
-        "description": "Composed & produced during the end of 2025's spring. This piece was highly influenced by the excitement of early romantic attraction.",
-        "isAlternate": false
-    },
-    {
-        "slug": "chemins-croises-piano",
-        "title": "Chemins Croisés (piano version)",
-        "album": "Lumière",
-        "image": "/images/CheminsCroises_pv.jpg",
-        "audioFile": "/audio/CheminsCroises_pv.mp3",
-        "year": 2025,
-        "duration": "4:39",
-        "description": "Description of the piece...",
-        "isAlternate": true,
-        "parentId": "chemins-croises"
-    }
+  {
+    "slug": "yidali",
+    "title": "Yidali",
+    "album": "M.A.",
+    "image": "/images/Yidali.jpg",
+    "audioFile": "/audio/Yidali.mp3",
+    "year": 2023,
+    "duration": "3:33",
+    "description": "Composed & produced during the beginning of 2023's summer. This piece was inspired with young love & excitement.",
+    "isAlternate": false
+  },
+  {
+    "slug": "ty",
+    "title": "Ty",
+    "album": "Russia",
+    "image": "/images/Ty.jpg",
+    "audioFile": "/audio/Ty.mp3",
+    "year": 2024,
+    "duration": "4:13",
+    "description": "Composed & produced during the end of 2023's winter. This piece celebrated frienship, mixed with a nostalgic mood.",
+    "isAlternate": false
+  },
+  {
+    "slug": "ty-piano",
+    "title": "Ty (piano version)",
+    "album": "Russia",
+    "image": "/images/Ty_pv.jpg",
+    "audioFile": "/audio/Ty_pv.mp3",
+    "year": 2024,
+    "duration": "4:13",
+    "description": "Description of the piece...",
+    "isAlternate": true,
+    "parentId": "ty"
+  },
+  {
+    "slug": "fragmentos-de-cristal",
+    "title": "Fragmentos de Cristal",
+    "album": "Castle",
+    "image": "/images/FragmentosDeCristal.jpg",
+    "audioFile": "/audio/FragmentosDeCristal.mp3",
+    "year": 2025,
+    "duration": "6:54",
+    "description": "Composed & produced during the end of 2024's winter. This piece was created & filled with hope.",
+    "isAlternate": false
+  },
+  {
+    "slug": "chemins-croises",
+    "title": "Chemins croisés",
+    "album": "Lumière",
+    "image": "/images/CheminsCroises.jpg",
+    "audioFile": "/audio/CheminsCroises.mp3",
+    "year": 2025,
+    "duration": "4:39",
+    "description": "Composed & produced during the end of 2025's spring. This piece was highly influenced by the excitement of early romantic attraction.",
+    "isAlternate": false
+  },
+  {
+    "slug": "chemins-croises-piano",
+    "title": "Chemins Croisés (piano version)",
+    "album": "Lumière",
+    "image": "/images/CheminsCroises_pv.jpg",
+    "audioFile": "/audio/CheminsCroises_pv.mp3",
+    "year": 2025,
+    "duration": "4:39",
+    "description": "Description of the piece...",
+    "isAlternate": true,
+    "parentId": "chemins-croises"
+  },
+  {
+    "slug": "the-little-one",
+    "title": "The Little One",
+    "album": "Squeaks Mc Squeakens",
+    "image": "/images/TheLittleOne.jpg",
+    "audioFile": "/audio/TheLittleOne.mp3",
+    "year": 2026,
+    "duration": "5:02",
+    "description": "Composed & produced during the beginning of 2026's autumn. This piece expresses the beauty behind the unstoppable passage of time.",
+    "isAlternate": false
+  }
 ]
