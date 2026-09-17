@@ -1,6 +1,6 @@
 ---
 interface Props {
-    text: string;
+  text: string;
 }
 
 const { text } = Astro.props;
@@ -9,196 +9,206 @@ const fullText = text;
 ---
 
 <section id="thoughts">
-    <div class="text-container" id="thoughts-text-box">
-        <div class="subtitleDiv" id="thoughtsDiv">
-            <h2>Thoughts</h2>
-            <button onclick="window.location.href='/thoughts'"> </button>
-        </div>
-        <p class="typing-text" id="typewriter-text">
-            <span id="cursor"></span>
-        </p>
+  <div class="text-container" id="thoughts-text-box">
+    <div
+      class="subtitleDiv"
+      id="thoughtsDiv"
+      onclick="window.location.href='/thoughts'"
+      style="cursor: pointer;"
+    >
+      <h2>Thoughts</h2>
     </div>
+    <p class="typing-text" id="typewriter-text">
+      <span id="cursor"></span>
+    </p>
+  </div>
 </section>
 
 <script define:vars={{ fullText: fullText }}>
-    // The fullText variable is injected from Astro props via define:vars
+  // The fullText variable is injected from Astro props via define:vars
 
-    // Element references, removing the TypeScript type assertions
-    const textElement = document.getElementById("typewriter-text");
-    const cursorElement = document.getElementById("cursor");
-    const hoverDiv = document.getElementById("thoughtsDiv");
+  // Element references, removing the TypeScript type assertions
+  const textElement = document.getElementById("typewriter-text");
+  const cursorElement = document.getElementById("cursor");
+  const hoverDiv = document.getElementById("thoughtsDiv");
 
-    // We must check if the elements exist before using them
-    if (textElement && cursorElement && hoverDiv) {
-        let typingInterval = undefined;
-        let index = 0;
+  // We must check if the elements exist before using them
+  if (textElement && cursorElement && hoverDiv) {
+    let typingInterval = undefined;
+    let index = 0;
 
-        // Helper function to get the current visible text length
-        function getCurrentTextLength() {
-            const textNodes = Array.from(textElement.childNodes).filter(
-                (node) => node.nodeType === Node.TEXT_NODE,
-            );
-            return textNodes.map((node) => node.textContent || "").join("").length;
-        }
-
-        // Function to handle adding characters one by one
-        function typeCharacter() {
-            if (index < fullText.length) {
-                const nextChar = fullText[index];
-
-                textElement.insertBefore(
-                    document.createTextNode(nextChar),
-                    cursorElement,
-                );
-                index++;
-            } else {
-                // Text is fully typed, stop the interval
-                if (typeof typingInterval === "number") {
-                    clearInterval(typingInterval);
-                    typingInterval = undefined;
-                }
-            }
-        }
-
-        // Function called on mouseenter
-        function startTyping() {
-            if (typeof typingInterval === "number") clearInterval(typingInterval);
-
-            cursorElement.style.display = "inline-block";
-            textElement.appendChild(cursorElement);
-
-            typingInterval = setInterval(typeCharacter, 15);
-        }
-
-        // Function called on mouseleave
-        function startDeleting() {
-            if (typeof typingInterval === "number") clearInterval(typingInterval);
-
-            typingInterval = setInterval(() => {
-                const textNodes = Array.from(textElement.childNodes).filter(
-                    (node) => node.nodeType === Node.TEXT_NODE,
-                );
-
-                if (textNodes.length > 0) {
-                    const lastTextNode = textNodes[textNodes.length - 1];
-
-                    let content = lastTextNode.textContent;
-
-                    if (content) {
-                        textElement.insertBefore(
-                            cursorElement,
-                            lastTextNode.nextSibling,
-                        );
-
-                        if (content.length > 1) {
-                            lastTextNode.textContent = content.slice(0, -1);
-                            index--;
-                        } else if (content.length === 1) {
-                            textElement.removeChild(lastTextNode);
-                            index--;
-                        }
-                    }
-                } else {
-                    if (typeof typingInterval === "number")
-                        clearInterval(typingInterval);
-                    typingInterval = undefined;
-                    cursorElement.style.display = "none";
-                    index = 0;
-                }
-            }, 20);
-        }
-
-        // Attach event listeners to the hoverDiv
-        hoverDiv.addEventListener("mouseenter", startTyping);
-        hoverDiv.addEventListener("mouseleave", startDeleting);
+    // Helper function to get the current visible text length
+    function getCurrentTextLength() {
+      const textNodes = Array.from(textElement.childNodes).filter(
+        (node) => node.nodeType === Node.TEXT_NODE,
+      );
+      return textNodes.map((node) => node.textContent || "").join("").length;
     }
+
+    // Function to handle adding characters one by one
+    function typeCharacter() {
+      if (index < fullText.length) {
+        const nextChar = fullText[index];
+
+        textElement.insertBefore(
+          document.createTextNode(nextChar),
+          cursorElement,
+        );
+        index++;
+      } else {
+        // Text is fully typed, stop the interval
+        if (typeof typingInterval === "number") {
+          clearInterval(typingInterval);
+          typingInterval = undefined;
+        }
+      }
+    }
+
+    // Function called on mouseenter
+    function startTyping() {
+      if (typeof typingInterval === "number") clearInterval(typingInterval);
+
+      cursorElement.style.display = "inline-block";
+      textElement.appendChild(cursorElement);
+
+      typingInterval = setInterval(typeCharacter, 15);
+    }
+
+    // Function called on mouseleave
+    function startDeleting() {
+      if (typeof typingInterval === "number") clearInterval(typingInterval);
+
+      typingInterval = setInterval(() => {
+        const textNodes = Array.from(textElement.childNodes).filter(
+          (node) => node.nodeType === Node.TEXT_NODE,
+        );
+
+        if (textNodes.length > 0) {
+          const lastTextNode = textNodes[textNodes.length - 1];
+
+          let content = lastTextNode.textContent;
+
+          if (content) {
+            textElement.insertBefore(cursorElement, lastTextNode.nextSibling);
+
+            if (content.length > 1) {
+              lastTextNode.textContent = content.slice(0, -1);
+              index--;
+            } else if (content.length === 1) {
+              textElement.removeChild(lastTextNode);
+              index--;
+            }
+          }
+        } else {
+          if (typeof typingInterval === "number") clearInterval(typingInterval);
+          typingInterval = undefined;
+          cursorElement.style.display = "none";
+          index = 0;
+        }
+      }, 20);
+    }
+
+    // Attach event listeners to the hoverDiv
+    hoverDiv.addEventListener("mouseenter", startTyping);
+    hoverDiv.addEventListener("mouseleave", startDeleting);
+  }
 </script>
 
 <style>
-    /*
+  /*
     * THOUGHTS SECTION STYLES (Now scoped to this component)
     */
 
-    #thoughtsDiv {
-        position: absolute;
-        z-index: 6;
-    }
+  #thoughtsDiv {
+    position: absolute;
+    z-index: 6;
+  }
 
-    /* The text-container is the viewport/bounding box */
+  /* The text-container is the viewport/bounding box */
+  .text-container {
+    position: relative;
+
+    width: 1024px;
+    height: 100vh;
+
+    /* Crucially, permanently clip any content that goes beyond this height */
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
+    border-radius: 16px;
+    transition: border-color 0.3s ease;
+  }
+
+  .subtitleDiv:hover {
+    cursor:
+      url("/icons/circle2.svg") 8 8,
+      auto !important;
+    border-color: #0091e1;
+  }
+
+  /* 2. Text Element Styling */
+  .typing-text {
+    position: absolute;
+    top: 0px;
+    left: 0px; /* Keep left offset for text readability */
+    height: 100%;
+    width: 100%;
+    padding: 32px;
+    font-size: 32px;
+    color: #4b8cb3;
+    max-width: calc(100% - 64px);
+  }
+
+  /* 💡 Cursor Element Styling */
+  #cursor {
+    display: none;
+    width: 3px;
+    height: 1.2em; /* Height should match font size */
+    background-color: white;
+    vertical-align: middle;
+    animation: blink-cursor 0.75s step-end infinite;
+  }
+
+  /* 3. Define the Animation Keyframes */
+  @keyframes blink-cursor {
+    from,
+    to {
+      opacity: 0; /* Animate opacity for blinking */
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* DISPLAY FOR MOBILE */
+  @media (max-width: 600px) {
     .text-container {
-        position: relative;
+      position: relative;
 
-        width: 1024px;
-        height: 100vh;
+      width: 768px;
+      height: 640px;
 
-        /* Crucially, permanently clip any content that goes beyond this height */
-        overflow: hidden;
+      /* Crucially, permanently clip any content that goes beyond this height */
+      overflow: hidden;
 
-        display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
     }
 
-    /* 2. Text Element Styling */
     .typing-text {
-        position: absolute;
-        top: 0px;
-        left: 0px; /* Keep left offset for text readability */
-        height: 100%;
-        width: 100%;
-        padding: 32px;
-        font-size: 32px;
-        color: #4b8cb3;
-        max-width: calc(100% - 64px);
+      position: absolute;
+      top: 0px;
+      left: 0px; /* Keep left offset for text readability */
+      height: 100%;
+      width: 100%;
+      padding: 32px;
+      font-size: 16px;
+      color: #4b8cb3;
+      max-width: calc(100% - 64px);
     }
-
-    /* 💡 Cursor Element Styling */
-    #cursor {
-        display: none;
-        width: 3px;
-        height: 1.2em; /* Height should match font size */
-        background-color: white;
-        vertical-align: middle;
-        animation: blink-cursor 0.75s step-end infinite;
-    }
-
-    /* 3. Define the Animation Keyframes */
-    @keyframes blink-cursor {
-        from,
-        to {
-            opacity: 0; /* Animate opacity for blinking */
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-
-    /* DISPLAY FOR MOBILE */
-    @media (max-width: 600px) {
-        .text-container {
-            position: relative;
-
-            width: 768px;
-            height: 640px;
-
-            /* Crucially, permanently clip any content that goes beyond this height */
-            overflow: hidden;
-
-            display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-        }
-
-        .typing-text {
-            position: absolute;
-            top: 0px;
-            left: 0px; /* Keep left offset for text readability */
-            height: 100%;
-            width: 100%;
-            padding: 32px;
-            font-size: 16px;
-            color: #4b8cb3;
-            max-width: calc(100% - 64px);
-        }
-    }
+  }
 </style>

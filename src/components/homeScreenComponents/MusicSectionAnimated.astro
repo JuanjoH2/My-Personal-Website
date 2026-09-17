@@ -6,125 +6,140 @@ import Music4 from "/public/icons/music4.svg";
 
 // Define the icons in an array to easily loop and render
 const musicIcons = [
-    Music1,
-    Music2,
-    Music3,
-    Music4,
-    Music1,
-    Music2,
-    Music3,
-    Music4,
-    Music1,
-    Music2,
-    Music3,
+  Music1,
+  Music2,
+  Music3,
+  Music4,
+  Music1,
+  Music2,
+  Music3,
+  Music4,
+  Music1,
+  Music2,
+  Music3,
 ];
 ---
 
 <section id="music">
-    <div class="subtitleDiv" id="compositionsDiv">
-        <h2>Music</h2>
-        <button onclick="window.location.href='/music'"> </button>
-    </div>
+  <div
+    class="subtitleDiv"
+    id="compositionsDiv"
+    onclick="window.location.href='/music'"
+    style="cursor: pointer;"
+  >
+    <h2>Music</h2>
+  </div>
 
-    {
-        musicIcons.map((Icon, index) => (
-            <Fragment>
-                <Icon class="music-icon" />
-            </Fragment>
-        ))
-    }
+  {
+    musicIcons.map((Icon, index) => (
+      <Fragment>
+        <Icon class="music-icon" />
+      </Fragment>
+    ))
+  }
 </section>
 
 <style>
-    /*
+  /*
     * MUSICAL COMPOSITIONS SECTION STYLES
     */
-    .music-icon {
-        /* Set the starting position */
-        translate: -50% -50%;
-        position: absolute;
-        z-index: -1;
-        left: 50%;
-        top: 50%;
+  .music-icon {
+    /* Set the starting position */
+    translate: -50% -50%;
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 50%;
 
-        /* Set size and color */
-        width: 64px;
-        height: 64px;
-        color: white;
+    /* Set size and color */
+    width: 64px;
+    height: 64px;
+    color: white;
 
-        /* Set the animation: MUST include the transition property for smooth return */
-        transition:
-            transform 1s ease-out,
-            width 1s ease-out,
-            height 1s ease-out,
-            color 1s ease-out;
-    }
+    /* Set the animation: MUST include the transition property for smooth return */
+    transition:
+      transform 1s ease-out,
+      width 1s ease-out,
+      height 1s ease-out,
+      color 1s ease-out;
+  }
 
-    /* 💡 REVERTED SELECTOR: Target the subtitleDiv for hover, 
+  #compositionsDiv {
+    transition: border-color 0.3s ease;
+  }
+
+  #compositionsDiv:hover {
+    border-color: #0091e1;
+    cursor:
+      url("/icons/circle2.svg") 8 8,
+      auto !important;
+  }
+
+  /* 💡 REVERTED SELECTOR: Target the subtitleDiv for hover, 
        then use the sibling combinator (~) to affect the icons.
     */
 
-    /* 1. Left and Up */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
-        /* -250px -> -25vw, -200px -> -20vh */
-        transform: translate(-25vw, -20vh);
-        transition-delay: 0.1s;
-        color: #0091e1;
-        width: 32px;
-        height: 32px;
-    } /* 2. Far Right */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(3) {
-        /* 350px -> 35vw, -20px -> -2vh */
-        transform: translate(35vw, -2vh);
-        transition-delay: 0.2s;
-        width: 32px;
-        height: 32px;
-    } /* 3. Down and Left (Opposite of 1) */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
-        /* -100px -> -10vw, 200px -> 20vh */
-        transform: translate(-10vw, 20vh);
-        transition-delay: 0.3s;
-        color: #0091e1;
-        width: 32px;
-        height: 32px;
-    } /* 4. Far Up */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(5) {
-        /* -50px -> -5vw, -300px -> -30vh */
-        transform: translate(-5vw, -30vh);
-        transition-delay: 0.4s;
-    } /* 5. Down and left */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
-        /* -300px -> -30vw, 250px -> 25vh */
-        transform: translate(-30vw, 25vh);
-        transition-delay: 0.5s;
-    } /* 6. Up, slightly centered */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
-        /* 50px -> 5vw, -200px -> -20vh */
-        transform: translate(5vw, -20vh);
-        transition-delay: 0.6s;
-    } /* 7. Far Down */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
-        /* 100px -> 10vw, 300px -> 30vh */
-        transform: translate(10vw, 30vh);
-        transition-delay: 0.7s;
-        color: #0091e1;
-    } /* 8. Just outside the left border */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
-        /* -350px -> -35vw, 50px -> 5vh */
-        transform: translate(-35vw, 5vh);
-        transition-delay: 0.8s;
-    } /* 9. Down and Right */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
-        /* 250px -> 25vw, 200px -> 20vh */
-        transform: translate(25vw, 20vh);
-        transition-delay: 0.9s; /* Use a responsive size unit for the large icon */
-        width: 15vw;
-        height: 15vw;
-    } /* 10. Up and Right */
-    #compositionsDiv:hover ~ .music-icon:nth-of-type(11) {
-        /* 300px -> 30vw, -300px -> -30vh */
-        transform: translate(30vw, -30vh);
-        transition-delay: 1s;
-        color: #0091e1;
-    }
+  /* 1. Left and Up */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
+    /* -250px -> -25vw, -200px -> -20vh */
+    transform: translate(-25vw, -20vh);
+    transition-delay: 0.1s;
+    color: #0091e1;
+    width: 32px;
+    height: 32px;
+  } /* 2. Far Right */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(3) {
+    /* 350px -> 35vw, -20px -> -2vh */
+    transform: translate(35vw, -2vh);
+    transition-delay: 0.2s;
+    width: 32px;
+    height: 32px;
+  } /* 3. Down and Left (Opposite of 1) */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
+    /* -100px -> -10vw, 200px -> 20vh */
+    transform: translate(-10vw, 20vh);
+    transition-delay: 0.3s;
+    color: #0091e1;
+    width: 32px;
+    height: 32px;
+  } /* 4. Far Up */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(5) {
+    /* -50px -> -5vw, -300px -> -30vh */
+    transform: translate(-5vw, -30vh);
+    transition-delay: 0.4s;
+  } /* 5. Down and left */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
+    /* -300px -> -30vw, 250px -> 25vh */
+    transform: translate(-30vw, 25vh);
+    transition-delay: 0.5s;
+  } /* 6. Up, slightly centered */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
+    /* 50px -> 5vw, -200px -> -20vh */
+    transform: translate(5vw, -20vh);
+    transition-delay: 0.6s;
+  } /* 7. Far Down */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
+    /* 100px -> 10vw, 300px -> 30vh */
+    transform: translate(10vw, 30vh);
+    transition-delay: 0.7s;
+    color: #0091e1;
+  } /* 8. Just outside the left border */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
+    /* -350px -> -35vw, 50px -> 5vh */
+    transform: translate(-35vw, 5vh);
+    transition-delay: 0.8s;
+  } /* 9. Down and Right */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
+    /* 250px -> 25vw, 200px -> 20vh */
+    transform: translate(25vw, 20vh);
+    transition-delay: 0.9s; /* Use a responsive size unit for the large icon */
+    width: 15vw;
+    height: 15vw;
+  } /* 10. Up and Right */
+  #compositionsDiv:hover ~ .music-icon:nth-of-type(11) {
+    /* 300px -> 30vw, -300px -> -30vh */
+    transform: translate(30vw, -30vh);
+    transition-delay: 1s;
+    color: #0091e1;
+  }
 </style>
