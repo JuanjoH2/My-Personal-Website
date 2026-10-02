@@ -1,0 +1,59 @@
+---
+// ScrollDownArrow.astro
+// A minimal animated arrow that hints to visitors they can scroll down.
+// Positioned absolutely at the bottom-center of the top-most (hero) section.
+---
+
+<a class="scroll-arrow" href="#main-content" aria-label="Scroll down">
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+</a>
+
+<style>
+    .scroll-arrow {
+        /* Position at bottom-center of the parent section */
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        /* Appearance */
+        color: white;
+        opacity: 0.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        /* Smooth bounce animation */
+        animation: bounce 2s ease-in-out infinite;
+
+        /* Smooth fade on hover */
+        transition: opacity 0.2s ease;
+    }
+
+    .scroll-arrow:hover {
+        opacity: 1;
+    }
+
+    @keyframes bounce {
+        0%,
+        100% {
+            transform: translateX(-50%) translateY(0);
+        }
+        50% {
+            transform: translateX(-50%) translateY(6px);
+        }
+    }
+</style>
