@@ -1,0 +1,15 @@
+{
+    "name": "Juanjo Hurtado",
+    "short_name": "JJH",
+    "icons": [
+        {
+            "src": "/favicon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#1e1f20",
+    "background_color": "#1e1f20",
+    "display": "standalone",
+    "start_url": "/"
+}
