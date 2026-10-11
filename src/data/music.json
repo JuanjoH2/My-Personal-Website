@@ -77,5 +77,16 @@
     "duration": "5:02",
     "description": "Composed & produced during the beginning of 2026's autumn. This piece expresses the beauty behind the unstoppable passage of time.",
     "isAlternate": false
+  },
+  {
+    "slug": "the-old-candle",
+    "title": "The Old Candle",
+    "album": "Autumn Works",
+    "image": "/images/TheOldCandle.jpg",
+    "audioFile": "/audio/TheOldCandle.mp3",
+    "year": 2026,
+    "duration": "4:55",
+    "description": "Composed & produced during the beginning of 2026's autumn. This piece was inspired by the eerie & mesmerizing dance of a flame in a dark room.",
+    "isAlternate": false
   }
 ]
