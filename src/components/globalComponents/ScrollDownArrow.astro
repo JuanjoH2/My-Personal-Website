@@ -57,3 +57,17 @@
     }
   }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const arrow = document.querySelector(".scroll-arrow");
+    const target = document.getElementById("main-content");
+
+    if (arrow && target) {
+      arrow.addEventListener("click", (e) => {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  });
+</script>
