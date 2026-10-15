@@ -1,26 +1,15 @@
 ---
-import Music1 from "/public/icons/music1.svg";
-import Music2 from "/public/icons/music2.svg";
-import Music3 from "/public/icons/music3.svg";
-import Music4 from "/public/icons/music4.svg";
-
-// Define the icons in an array to easily loop and render
-const musicIcons = [
-  Music1,
-  Music2,
-  Music3,
-  Music4,
-  Music1,
-  Music2,
-  Music3,
-  Music4,
-  Music1,
-  Music2,
-  Music3,
-];
+// MusicSectionAnimated.astro
+// Minimalist, high-fidelity harmonic audio visualizer.
+// Invisible at rest; smoothly swells and blooms into life on container hover.
 ---
 
 <section id="music">
+  <!-- Harmonic Audio Visualizer canvas positioned behind the card -->
+  <div class="visualizer-container" aria-hidden="true">
+    <canvas id="audioVisualizerCanvas"></canvas>
+  </div>
+
   <div
     class="subtitleDiv"
     id="compositionsDiv"
@@ -29,42 +18,275 @@ const musicIcons = [
   >
     <h2>Music</h2>
   </div>
-
-  {
-    musicIcons.map((Icon, index) => (
-      <Fragment>
-        <Icon class="music-icon" />
-      </Fragment>
-    ))
-  }
 </section>
 
+<script is:inline>
+  (function () {
+    function init() {
+      const canvas = document.getElementById("audioVisualizerCanvas");
+      const compositionsDiv = document.getElementById("compositionsDiv");
+      const musicSection = document.getElementById("music");
+
+      if (!canvas || !compositionsDiv || !musicSection) return;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      let isHovered = false;
+      let animFrameId = null;
+
+      // Start fully invisible at rest
+      let currentAmp = 0;
+      let targetAmp = 0;
+      let currentOpacity = 0;
+      let targetOpacity = 0;
+
+      // 5 Harmonic waves: frequencies, speeds, relative amplitudes, colors, and vertical offsets
+      const waves = [
+        {
+          baseFreq: 0.007,
+          speed: 0.024,
+          ampRatio: 1.0,
+          yOffsetRatio: -0.32, // Crests above the card on mobile
+          color: "rgba(0, 145, 225, 0.9)",
+          lineWidth: 2.5,
+          phase: 0,
+          glow: true,
+        },
+        {
+          baseFreq: 0.012,
+          speed: -0.02,
+          ampRatio: 0.9,
+          yOffsetRatio: 0.32, // Crests below the card on mobile
+          color: "rgba(255, 255, 255, 0.75)",
+          lineWidth: 1.8,
+          phase: 1.6,
+          glow: false,
+        },
+        {
+          baseFreq: 0.018,
+          speed: 0.028,
+          ampRatio: 0.75,
+          yOffsetRatio: 0, // Waves directly through the center
+          color: "rgba(0, 215, 255, 0.8)",
+          lineWidth: 2.0,
+          phase: 3.2,
+          glow: true,
+        },
+        {
+          baseFreq: 0.006,
+          speed: -0.014,
+          ampRatio: 0.95,
+          yOffsetRatio: -0.18,
+          color: "rgba(0, 110, 220, 0.55)",
+          lineWidth: 2.2,
+          phase: 4.4,
+          glow: false,
+        },
+        {
+          baseFreq: 0.024,
+          speed: 0.034,
+          ampRatio: 0.6,
+          yOffsetRatio: 0.18,
+          color: "rgba(255, 255, 255, 0.45)",
+          lineWidth: 1.4,
+          phase: 5.6,
+          glow: false,
+        },
+      ];
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = musicSection.clientWidth || window.innerWidth;
+        const height = musicSection.clientHeight || window.innerHeight;
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function draw() {
+        const width = musicSection.clientWidth || window.innerWidth;
+        const height = musicSection.clientHeight || window.innerHeight;
+        const centerY = height / 2;
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Smooth interpolation
+        currentAmp += (targetAmp - currentAmp) * 0.08;
+        currentOpacity += (targetOpacity - currentOpacity) * 0.08;
+
+        // If completely faded out and not hovering, stop rendering to conserve CPU/battery
+        if (!isHovered && currentOpacity < 0.005) {
+          currentOpacity = 0;
+          currentAmp = 0;
+          ctx.clearRect(0, 0, width, height);
+          animFrameId = null;
+          return;
+        }
+
+        ctx.globalAlpha = currentOpacity;
+
+        const isMobile = width < 768;
+        // Higher frequency scale on mobile ensures full sinusoidal cycles within smaller widths
+        const freqScale = isMobile ? 2.4 : 1.0;
+        const lineScale = isMobile ? 1.3 : 1.0;
+
+        for (let i = 0; i < waves.length; i++) {
+          const wave = waves[i];
+          wave.phase += wave.speed;
+
+          ctx.beginPath();
+          ctx.strokeStyle = wave.color;
+          ctx.lineWidth = wave.lineWidth * lineScale;
+
+          if (wave.glow && isHovered) {
+            ctx.shadowColor = "#0091e1";
+            ctx.shadowBlur = isMobile ? 22 : 16;
+          } else {
+            ctx.shadowBlur = 0;
+          }
+
+          const step = isMobile ? 3 : 4;
+          let isFirst = true;
+
+          // Vertical track offset
+          const verticalOffset = (isMobile ? wave.yOffsetRatio * 1.4 : wave.yOffsetRatio * 0.4) * currentAmp;
+
+          for (let x = 0; x <= width; x += step) {
+            const progress = x / width;
+
+            // Envelope: flatter on mobile to stay prominent across margins, smooth cosine on desktop
+            const envelope = isMobile
+              ? Math.pow(Math.sin(progress * Math.PI), 0.65)
+              : 0.5 * (1 - Math.cos(2 * Math.PI * progress));
+
+            const freq = wave.baseFreq * freqScale;
+
+            // Harmonic elevation
+            const waveElevation =
+              Math.sin(x * freq + wave.phase) *
+              Math.cos(x * (freq * 0.4) + wave.phase * 0.35);
+
+            const y = centerY + verticalOffset * envelope + waveElevation * currentAmp * wave.ampRatio * envelope;
+
+            if (isFirst) {
+              ctx.moveTo(x, y);
+              isFirst = false;
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+
+          ctx.stroke();
+        }
+
+        ctx.shadowBlur = 0;
+        animFrameId = requestAnimationFrame(draw);
+      }
+
+      function onEnter() {
+        isHovered = true;
+        const width = musicSection.clientWidth || window.innerWidth;
+        const isMobile = width < 768;
+
+        // Dynamic amplitude: larger on mobile to crest comfortably above and below the 128px card
+        targetAmp = isMobile ? 88 : 52;
+        targetOpacity = 1.0;
+
+        if (!animFrameId) {
+          animFrameId = requestAnimationFrame(draw);
+        }
+      }
+
+      function onLeave() {
+        isHovered = false;
+        targetAmp = 0;
+        targetOpacity = 0;
+
+        // If loop wasn't running, run it until opacity hits 0
+        if (!animFrameId) {
+          animFrameId = requestAnimationFrame(draw);
+        }
+      }
+
+      // Strictly hover on the container box (compositionsDiv)
+      compositionsDiv.addEventListener("mouseenter", onEnter);
+      compositionsDiv.addEventListener("mouseleave", onLeave);
+
+      // Mobile touch interaction
+      compositionsDiv.addEventListener(
+        "touchstart",
+        () => {
+          if (!isHovered) {
+            onEnter();
+          }
+        },
+        { passive: true },
+      );
+
+      // Tap outside container to dismiss on touch devices
+      document.addEventListener(
+        "touchstart",
+        (e) => {
+          if (!compositionsDiv.contains(e.target) && isHovered) {
+            onLeave();
+          }
+        },
+        { passive: true },
+      );
+
+      window.addEventListener("resize", () => {
+        resize();
+        if (isHovered) {
+          const width = musicSection.clientWidth || window.innerWidth;
+          targetAmp = width < 768 ? 88 : 52;
+        }
+      });
+
+      resize();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
 <style>
-  /*
-    * MUSICAL COMPOSITIONS SECTION STYLES
-    */
-  .music-icon {
-    /* Set the starting position */
-    translate: -50% -50%;
+  #music {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .visualizer-container {
     position: absolute;
-    z-index: -1;
-    left: 50%;
-    top: 50%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-    /* Set size and color */
-    width: 64px;
-    height: 64px;
-    color: white;
-
-    /* Set the animation: MUST include the transition property for smooth return */
-    transition:
-      transform 1s ease-out,
-      width 1s ease-out,
-      height 1s ease-out,
-      color 1s ease-out;
+  #audioVisualizerCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
   }
 
   #compositionsDiv {
+    position: relative;
+    z-index: 5;
     transition: border-color 0.3s ease;
   }
 
@@ -73,73 +295,5 @@ const musicIcons = [
     cursor:
       url("/icons/circle2.svg") 8 8,
       auto !important;
-  }
-
-  /* 💡 REVERTED SELECTOR: Target the subtitleDiv for hover, 
-       then use the sibling combinator (~) to affect the icons.
-    */
-
-  /* 1. Left and Up */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(2) {
-    /* -250px -> -25vw, -200px -> -20vh */
-    transform: translate(-25vw, -20vh);
-    transition-delay: 0.1s;
-    color: #0091e1;
-    width: 32px;
-    height: 32px;
-  } /* 2. Far Right */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(3) {
-    /* 350px -> 35vw, -20px -> -2vh */
-    transform: translate(35vw, -2vh);
-    transition-delay: 0.2s;
-    width: 32px;
-    height: 32px;
-  } /* 3. Down and Left (Opposite of 1) */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(4) {
-    /* -100px -> -10vw, 200px -> 20vh */
-    transform: translate(-10vw, 20vh);
-    transition-delay: 0.3s;
-    color: #0091e1;
-    width: 32px;
-    height: 32px;
-  } /* 4. Far Up */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(5) {
-    /* -50px -> -5vw, -300px -> -30vh */
-    transform: translate(-5vw, -30vh);
-    transition-delay: 0.4s;
-  } /* 5. Down and left */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(6) {
-    /* -300px -> -30vw, 250px -> 25vh */
-    transform: translate(-30vw, 25vh);
-    transition-delay: 0.5s;
-  } /* 6. Up, slightly centered */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(7) {
-    /* 50px -> 5vw, -200px -> -20vh */
-    transform: translate(5vw, -20vh);
-    transition-delay: 0.6s;
-  } /* 7. Far Down */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(8) {
-    /* 100px -> 10vw, 300px -> 30vh */
-    transform: translate(10vw, 30vh);
-    transition-delay: 0.7s;
-    color: #0091e1;
-  } /* 8. Just outside the left border */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(9) {
-    /* -350px -> -35vw, 50px -> 5vh */
-    transform: translate(-35vw, 5vh);
-    transition-delay: 0.8s;
-  } /* 9. Down and Right */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(10) {
-    /* 250px -> 25vw, 200px -> 20vh */
-    transform: translate(25vw, 20vh);
-    transition-delay: 0.9s; /* Use a responsive size unit for the large icon */
-    width: 15vw;
-    height: 15vw;
-  } /* 10. Up and Right */
-  #compositionsDiv:hover ~ .music-icon:nth-of-type(11) {
-    /* 300px -> 30vw, -300px -> -30vh */
-    transform: translate(30vw, -30vh);
-    transition-delay: 1s;
-    color: #0091e1;
   }
 </style>
