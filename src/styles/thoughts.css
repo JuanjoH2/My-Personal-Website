@@ -21,7 +21,7 @@ html {
     /* Applies the HEX #fdfdfd to the text */
     color: white;
     /* Applies the Montserrat font-family to the text */
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Google Sans', 'Montserrat', sans-serif;
     /* Personalized cursor */
     cursor: url('/icons/circle.svg') 8 8, auto;
 }
