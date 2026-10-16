@@ -1,0 +1,75 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # Allows the Jules workflow to trigger this manually
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Grant Playwright the power to merge PRs
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    # Block Dependabot major bumps AND raw Node updater PRs so they wait for Jules
+    if: >
+      !(github.actor == 'dependabot[bot]' && !contains(github.head_ref, 'minor-and-patch-updates')) &&
+      !(github.actor == 'github-actions[bot]' && contains(github.head_ref, 'dependabot/node/update-nvmrc'))
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      # Directly merge the Jules PR and clean up any linked PRs
+      - name: Auto-merge Jules PR and Clean Up
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Tests passed! Fetching Jules PR info..."
+          PR_INFO=$(gh pr list --head "$GITHUB_REF_NAME" --state open --json number,body -q '.[0]')
+          PR_NUM=$(echo "$PR_INFO" | jq -r '.number // empty')
+          PR_BODY=$(echo "$PR_INFO" | jq -r '.body // empty')
+
+          if [ -n "$PR_NUM" ] && [ "$PR_NUM" != "null" ]; then
+            echo "Enforcing Jules PR targets main before merging..."
+            gh pr edit "$PR_NUM" --base main
+
+            echo "Executing squash merge on Jules PR #$PR_NUM..."
+            gh pr merge "$PR_NUM" --squash
+            
+            # Extract the original PR number if it exists (e.g. "Closes #XYZ")
+            DEP_PR=$(echo "$PR_BODY" | grep -iE 'Closes #[0-9]+' | grep -oE '[0-9]+' | head -n 1 || true)
+            
+            if [ -n "$DEP_PR" ]; then
+              echo "Closing redundant initial PR #$DEP_PR..."
+              gh pr close "$DEP_PR" -c "Automatically closed by successful Jules update in PR #$PR_NUM" || true
+            fi
+            
+            echo "Deleting Jules remote branch to keep repository clean..."
+            git push origin --delete "$GITHUB_REF_NAME" || true
+          else
+            echo "Could not find open PR for branch $GITHUB_REF_NAME"
+          fi

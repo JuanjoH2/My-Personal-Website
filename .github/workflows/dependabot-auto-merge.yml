@@ -1,44 +1,55 @@
-name: Dependabot Auto-Merge
-on: pull_request
+name: Dependabot Auto-merge
+on:
+  workflow_run:
+    workflows: ["Playwright Tests"]
+    types:
+      - completed
 
 permissions:
-  contents: write
   pull-requests: write
+  contents: write
 
 jobs:
-  dependabot:
+  merge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v2
+      - name: Merge passing Dependabot PR
+        uses: actions/github-script@v7
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Get the exact branch name that just passed the Playwright test
+            const branchName = context.payload.workflow_run.head_branch;
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+            // 2. Search for an open Pull Request from this specific branch
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${branchName}`,
+              state: 'open'
+            });
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".node-version"
+            // 3. Ensure we found a PR and it belongs to EITHER Dependabot or Jules
+            const pr = pulls.find(p => p.user.login === 'dependabot[bot]' || p.user.login === 'google-labs-jules[bot]');
 
-      - name: Install dependencies
-        run: npm ci
+            if (pr) {
+              // Abort if it is a major Dependabot bump OR the Node updater (waiting for Jules)
+              if (
+                (pr.user.login === 'dependabot[bot]' && !branchName.includes('minor-and-patch-updates')) ||
+                (pr.user.login === 'github-actions[bot]' && branchName.includes('dependabot/node/update-nvmrc'))
+              ) {
+                console.log(`Skipping auto-merge: PR #${pr.number} is a major bump waiting for Jules.`);
+                return;
+              }  
 
-      - name: Run Astro Build Test
-        run: npm run build
-
-      - name: Merge PR immediately after successful build
-        run: gh pr merge --merge "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Ping Architect on Failure
-        if: failure()
-        run: gh pr comment "$PR_URL" --body "⚠️ **Architecture Alert:** @JuanjoH2, the dependency build failed. Manual intervention required to protect the asset."
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+              console.log(`Found PR #${pr.number} for branch ${branchName}. Executing squash merge...`);
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                merge_method: 'squash'
+              });
+            } else {
+              console.log(`Could not find an open Dependabot or Jules PR for branch: ${branchName}`);
+            }

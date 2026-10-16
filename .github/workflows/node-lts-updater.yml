@@ -1,0 +1,83 @@
+name: Node LTS Updater
+on:
+  schedule:
+    - cron: "0 9 * * 0" # Runs every Monday at 9:00 AM
+  workflow_dispatch: # Allows manual trigger from Actions tab
+
+jobs:
+  update-node:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write # Required to trigger Playwright manually
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Node LTS Version
+        id: node-check
+        run: |
+          # Fetch official Node.js registry and extract latest LTS version
+          LATEST_LTS=$(curl -sS https://nodejs.org/dist/index.json | jq -r 'map(select(.lts != false))[0].version')
+          CURRENT=$(cat .nvmrc 2>/dev/null | tr -d 'v \n' || echo "none")
+
+          # Clean the 'v' prefix
+          LATEST_CLEAN=$(echo "$LATEST_LTS" | tr -d 'v \n')
+
+          if [ -z "$LATEST_CLEAN" ] || [ "$LATEST_CLEAN" == "null" ]; then
+            echo "Failed to fetch Node.js version."
+            exit 1
+          fi
+
+          if [ "$CURRENT" != "$LATEST_CLEAN" ]; then
+            echo "outdated=true" >> $GITHUB_OUTPUT
+            echo "latest=$LATEST_CLEAN" >> $GITHUB_OUTPUT
+            echo "Node is outdated. Upgrading $CURRENT -> $LATEST_CLEAN"
+          else
+            echo "outdated=false" >> $GITHUB_OUTPUT
+            echo "Node is already up to date ($CURRENT)."
+          fi
+
+      - name: Invoke Jules for Node Update
+        if: steps.node-check.outputs.outdated == 'true'
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          REPO_FULL_NAME: ${{ github.repository }}
+          LATEST_NODE: ${{ steps.node-check.outputs.latest }}
+        run: |
+          curl -sS -X POST "https://jules.googleapis.com/v1alpha/sessions" \
+            -H "Content-Type: application/json" \
+            -H "X-Goog-Api-Key: $JULES_API_KEY" \
+            -d '{
+              "prompt": "The Node.js LTS version is now v'"$LATEST_NODE"'. 1. Update the .nvmrc file and any package.json engines requirements to exactly match this version. 2. Refactor any deprecated Node.js APIs if necessary. 3. When creating your PR, you MUST target the \"main\" branch. 4. Follow AGENTS.md.",
+              "sourceContext": {
+                "source": "sources/github/'"$REPO_FULL_NAME"'",
+                "githubRepoContext": {
+                  "startingBranch": "main"
+                }
+              },
+              "automationMode": "AUTO_CREATE_PR",
+              "title": "Major Update: Bump Node.js LTS to v'"$LATEST_NODE"'"
+            }'
+
+      - name: Wait for Jules and Trigger Playwright
+        if: steps.node-check.outputs.outdated == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Waiting up to 20 minutes for Jules to create the Node PR..."
+          for i in {1..40}; do
+            sleep 30
+            # Search for the Jules PR containing Node/LTS in the title
+            JULES_PR=$(gh pr list --author "google-labs-jules[bot]" --state open --json number,headRefName,title | jq -c 'map(select(.title | contains("Node")))[0] // empty')
+            PR_NUM=$(echo "$JULES_PR" | jq -r '.number // empty')
+            BRANCH=$(echo "$JULES_PR" | jq -r '.headRefName // empty')
+            
+            if [ -n "$PR_NUM" ] && [ "$PR_NUM" != "null" ]; then
+              echo "Found Jules Node PR #$PR_NUM on branch $BRANCH. Triggering Playwright..."
+              gh workflow run playwright.yml --ref "$BRANCH"
+              break
+            fi
+          done

@@ -16,5 +16,9 @@
     "@vercel/speed-insights": "^1.2.0",
     "astro": "^7.3.7",
     "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5"
   }
 }

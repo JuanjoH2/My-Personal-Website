@@ -1,0 +1,70 @@
+name: Trigger Jules for Major Updates
+on:
+  pull_request:
+    types: [opened, labeled]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  jules-invoke:
+    # Trigger if it's Dependabot (excluding minors) OR if it's the Node.js updater
+    if: >
+      (github.actor == 'dependabot[bot]' && !contains(github.head_ref, 'minor-and-patch-updates')) ||
+      (github.actor == 'github-actions[bot]' && contains(github.head_ref, 'dependabot/node/update-nvmrc'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write # Required to trigger Playwright manually
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Invoke Jules REST API
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          REPO_FULL_NAME: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          curl -sS -X POST "https://jules.googleapis.com/v1alpha/sessions" \
+            -H "Content-Type: application/json" \
+            -H "X-Goog-Api-Key: $JULES_API_KEY" \
+            -d '{
+              "prompt": "Dependabot opened PR #'"$PR_NUMBER"' on branch '"$BRANCH_NAME"'. 1. Refactor the code to fix breaking changes. 2. When creating your PR, you MUST target the \"main\" branch. 3. In your PR description, write EXACTLY \"Closes #'"$PR_NUMBER"'\" so GitHub closes the redundant Dependabot PR. 4. Follow AGENTS.md.",
+              "sourceContext": {
+                "source": "sources/github/'"$REPO_FULL_NAME"'",
+                "githubRepoContext": {
+                  "startingBranch": "'"$BRANCH_NAME"'"
+                }
+              },
+              "automationMode": "AUTO_CREATE_PR",
+              "title": "Major Update & Fixes (Replaces PR #'"$PR_NUMBER"')"
+            }'
+
+      - name: Wait for Jules and Trigger Playwright
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "Waiting up to 20 minutes for Jules to create the new PR..."
+          for i in {1..40}; do
+            sleep 30
+            # Search for the Jules PR that mentions our Dependabot PR number
+            JULES_PR=$(gh pr list --author "google-labs-jules[bot]" --state open --search "$PR_NUMBER" --json number,headRefName)
+            PR_NUM=$(echo "$JULES_PR" | jq -r '.[0].number // empty')
+            BRANCH=$(echo "$JULES_PR" | jq -r '.[0].headRefName // empty')
+            
+            if [ -n "$PR_NUM" ] && [ "$PR_NUM" != "null" ]; then
+              echo "Found Jules PR #$PR_NUM on branch $BRANCH. Triggering Playwright..."
+              gh workflow run playwright.yml --ref "$BRANCH"
+              break
+            fi
+          done
