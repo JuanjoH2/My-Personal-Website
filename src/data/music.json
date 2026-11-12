@@ -88,5 +88,16 @@
     "duration": "4:55",
     "description": "Composed & produced during the beginning of 2026's autumn. This piece was inspired by the eerie & mesmerizing dance of a flame in a dark room.",
     "isAlternate": false
+  },
+  {
+    "slug": "a-cloudy-day",
+    "title": "a cloudy day",
+    "album": "Autumn Works",
+    "image": "/images/ACloudyDay.jpg",
+    "audioFile": "/audio/ACloudyDay.mp3",
+    "year": 2026,
+    "duration": "5:10",
+    "description": "Composed & produced mid 2026's autumn. This piece was inspired by the foggy warmth of a cloudy day while zipping coffee.",
+    "isAlternate": false
   }
 ]
