@@ -90,14 +90,14 @@
     "isAlternate": false
   },
   {
-    "slug": "a-cloudy-day",
-    "title": "a cloudy day",
+    "slug": "the-door",
+    "title": "The Door",
     "album": "Autumn Works",
-    "image": "/images/ACloudyDay.jpg",
-    "audioFile": "/audio/ACloudyDay.mp3",
+    "image": "/images/TheDoor.jpg",
+    "audioFile": "/audio/TheDoor.mp3",
     "year": 2026,
     "duration": "5:10",
-    "description": "Composed & produced mid 2026's autumn. This piece was inspired by the foggy warmth of a cloudy day while zipping coffee.",
+    "description": "Composed & produced mid 2026's autumn. This piece was inspired by subtle light that emanates excitement that lies behind a possibility.",
     "isAlternate": false
   }
 ]
